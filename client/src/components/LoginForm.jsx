@@ -1,6 +1,7 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const LoginForm = ({ closeForm }) => {
 
@@ -26,18 +27,19 @@ const LoginForm = ({ closeForm }) => {
     if( loginValues.email !== null && loginValues.senha !== null ) {
       
       axios.post('http://localhost:3000/login', loginValues)
-      .then(res => {
-        console.log(res)
-      })
       .catch(err => {
         console.log(err);
         if(err.response.status == 400) {
           setError("Email ou senha inválidos!")
         }
       })
-      .finally(
-        
-      )
+      .then(res => {
+        console.log(res.data)
+        if(res.status == 200) {
+          setUser(res.data);
+          navigate('/');
+        }
+      })
     } else {
       setError("Preencha todos os campos!")
     }
@@ -61,7 +63,7 @@ const LoginForm = ({ closeForm }) => {
           <input name='senha' type='password' placeholder='******' onChange={handleInput} />
         </label>
 
-        <button type='submit'>Cadastrar</button>
+        <button type='submit'>Logar</button>
       </form>
 
       <button onClick={() => closeForm()}>Cancelar</button>

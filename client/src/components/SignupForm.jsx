@@ -32,16 +32,16 @@ const SignupForm = ( {userType = 'estudante', closeForm, login} ) => {
       };
 
       axios.post('http://localhost:3000/signup', userData)
-      .then(res => {
-        console.log(res)
-      })
       .catch(err => {
         console.log(err);
         if(err.response.status == 400) {
           setError("Email já cadastrado!")
         }
       })
-      .finally(login())
+      .then(res => {
+        console.log(res);
+        login();
+      })
     } else {
       setError("As senhas devem ser iguais!")
     }

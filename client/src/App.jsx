@@ -8,20 +8,23 @@ function App() {
 
   const navigate = useNavigate();
 
-  const unsetUser = () => {
-    setUser({});
-  };
-
   useEffect(() => {
 
-    if (user?.id === undefined || user?.id === null) {
-      navigate("/landing");
-    }
+    if(user?.tipo == 'estudante') navigate('/courses');
+
+    if(user?.tipo == 'instrutor') navigate('/instrutor');
+
+    if(user?.tipo == 'admin') navigate('/admin');
+
+    if(user == null) navigate('/landing');
 
   }, [ user ])
 
   return (
-    <AuthContext.Provider value={{ user, setUser, unsetUser }}>
+    <AuthContext.Provider value={{ user, setUser }}>
+      <button onClick={() => {
+        console.log(user)
+      }}>Eoq</button>
       <Outlet />
     </AuthContext.Provider>
   );
