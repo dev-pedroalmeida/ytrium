@@ -5,11 +5,19 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import App from "./App.jsx";
 import ErrorPage from "./pages/ErrorPage.jsx";
-import CoursesPage from "./pages/CoursesPage.jsx";
-import LandingPage from "./pages/LandingPage.jsx";
 import StudentDashboard from "./pages/StudentDashboard";
+import CoursesPage from "./pages/CoursesPage.jsx";
+import SubscriptionsPage from "./pages/SubscriptionsPage.jsx";
+import LandingPage from "./pages/LandingPage.jsx";
 import InstructorDashboard from "./pages/InstructorDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
+import InstructorCourses from "./pages/InstructorCourses";
+import StudentHome from "./pages/StudentHome";
+import InstructorHome from "./pages/InstructorHome";
+import AdminHome from "./pages/AdminHome";
+import AdminUsersList from "./pages/AdminUsersList";
+import AdminCoursesList from "./pages/AdminCoursesList";
+import AdminBadges from "./pages/AdminBadges";
 
 const router = createBrowserRouter([
   {
@@ -22,22 +30,58 @@ const router = createBrowserRouter([
         element: <LandingPage />,
       },
       {
-        path: "/",
+        path: "/student",
         element: <StudentDashboard />,
         children: [
           {
-            path: "courses",
+            index: true,
+            element: <StudentHome />
+          },
+          {
+            path: "explore",
             element: <CoursesPage />
+          },
+          {
+            path: "subscriptions",
+            element: <SubscriptionsPage />
           }
         ]
       },
       {
         path: "/instructor",
-        element: <InstructorDashboard />
+        element: <InstructorDashboard />,
+        children: [
+          {
+            index: true,
+            element: <InstructorHome />,
+          },
+          {
+            path: "courses",
+            element: <InstructorCourses />,
+          },
+        ]
       },
       {
         path: "/admin",
-        element: <AdminDashboard />
+        element: <AdminDashboard />,
+        children: [
+          {
+            index: true,
+            element: <AdminHome />,
+          },
+          {
+            path: "users",
+            element: <AdminUsersList />,
+          },
+          {
+            path: "courses",
+            element: <AdminCoursesList />
+          },
+          {
+            path: "badges",
+            element: <AdminBadges />
+          }
+        ]
       }
     ]
   },

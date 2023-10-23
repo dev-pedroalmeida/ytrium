@@ -1,12 +1,12 @@
 import React from 'react';
 import styles from '../styles/styles.module.css';
 
-const CoursesPage = () => {
+const StudentHome = () => {
   return (
     <div className={styles.container}>
-      CoursesPage
+      StudentHome
     </div>
   )
 }
 
-export default CoursesPage
+export default StudentHome

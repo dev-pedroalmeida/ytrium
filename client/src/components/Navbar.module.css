@@ -1,0 +1,24 @@
+
+header {
+    padding: 12px 96px;
+    border-bottom: 1px solid var(--border-color);
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+header .btnGroup > *:not(:last-child) {
+    margin-right: 8px;
+}
+
+.logo {
+    height: 24px;
+}
+
+.navGroup {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 64px;
+}

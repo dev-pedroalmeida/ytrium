@@ -2,6 +2,8 @@ import React, { useContext, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import styles from "../styles/styles.module.css";
+import lsStyles from "./LogSignForm.module.css";
 
 const LoginForm = ({ closeForm }) => {
 
@@ -26,7 +28,9 @@ const LoginForm = ({ closeForm }) => {
 
     if( loginValues.email !== null && loginValues.senha !== null ) {
       
-      axios.post('http://localhost:3000/login', loginValues)
+      axios.post('http://localhost:3000/login', loginValues, {
+        withCredentials: true,
+      })
       .catch(err => {
         console.log(err);
         if(err.response.status == 400) {
@@ -47,12 +51,15 @@ const LoginForm = ({ closeForm }) => {
   }
 
   return (
-    <div>
-      Login
-
-      {error && <div className='error'>{error}</div>}
-      
+    <div className={lsStyles.overlay}>
       <form id='loginform' onSubmit={handleLogin}>
+        <div className={lsStyles.formTitle}>
+          Login
+          <p className={lsStyles.formLegend}>
+            Insira seus dados!
+          </p>
+        </div>
+        {error && <div className={lsStyles.error}>{error}</div>}
         <label>
           Email:
           <input name='email' type='email' placeholder='email@exemplo.com' onChange={handleInput} />
@@ -63,10 +70,9 @@ const LoginForm = ({ closeForm }) => {
           <input name='senha' type='password' placeholder='******' onChange={handleInput} />
         </label>
 
-        <button type='submit'>Logar</button>
+        <button type='submit' className={styles.btn}>Logar</button>
+        <button className={styles.btnSecondary} onClick={() => closeForm()}>Cancelar</button>
       </form>
-
-      <button onClick={() => closeForm()}>Cancelar</button>
     </div>
   );
 };

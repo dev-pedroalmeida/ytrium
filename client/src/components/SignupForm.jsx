@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 import axios from 'axios';
+import styles from "../styles/styles.module.css";
+import lsStyles from "./LogSignForm.module.css";
 
 const SignupForm = ( {userType = 'estudante', closeForm, login} ) => {
   
@@ -49,36 +51,38 @@ const SignupForm = ( {userType = 'estudante', closeForm, login} ) => {
   }
   
   return (
-    <div>
-      Inscreva-se como um { userType }
-
-      {error && <div className='error'>{error}</div>}
-
+    <div className={lsStyles.overlay}>
       <form id='signupform' onSubmit={handleSignup}>
+        <div className={lsStyles.formTitle}>
+          Inscreva-se
+          <p className={lsStyles.formLegend}>
+            Torne-se um {userType}!
+          </p>
+        </div>
+        {error && <div className={lsStyles.error}>{error}</div>}
         <label>
           Nome:
-          <input name='nome' type='text' placeholder='Nome Exemplo' onChange={handleInput} />
+          <input required name='nome' type='text' placeholder='Nome Exemplo' onChange={handleInput} />
         </label>
         
         <label>
           Email:
-          <input name='email' type='email' placeholder='email@exemplo.com' onChange={handleInput} />
+          <input required name='email' type='email' placeholder='email@exemplo.com' onChange={handleInput} />
         </label>
 
         <label>
           Senha:
-          <input name='senha' type='password' placeholder='******' onChange={handleInput} />
+          <input required name='senha' type='password' placeholder='******' onChange={handleInput} />
         </label>
 
         <label>
           Confirma senha:
-          <input name='confirmaSenha' type='password' placeholder='******' onChange={handleInput} />
+          <input required name='confirmaSenha' type='password' placeholder='******' onChange={handleInput} />
         </label>
 
-        <button type='submit'>Cadastrar</button>
+        <button type='submit' className={styles.btn}>Cadastrar</button>
+        <button onClick={() => closeForm()} className={styles.btnSecondary}>Cancelar</button>
       </form>
-
-      <button onClick={() => closeForm()}>Cancelar</button>
     </div>
   )
 }

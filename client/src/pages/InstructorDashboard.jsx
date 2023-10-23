@@ -1,8 +1,13 @@
 import React from 'react'
+import Navbar from '../components/Navbar'
+import { Outlet } from 'react-router-dom'
 
 const InstructorDashboard = () => {
   return (
-    <div>InstructorDashboard</div>
+    <>
+      <Navbar userType={'instrutor'} />
+      <Outlet />
+    </>
   )
 }
 

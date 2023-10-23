@@ -1,12 +1,12 @@
-import React from 'react';
+import React from 'react'
 import styles from '../styles/styles.module.css';
 
-const CoursesPage = () => {
+const AdminBadges = () => {
   return (
     <div className={styles.container}>
-      CoursesPage
+      AdminBadges
     </div>
   )
 }
 
-export default CoursesPage
+export default AdminBadges

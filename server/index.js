@@ -1,25 +1,25 @@
-const express = require("express");
-const cors = require("cors");
+const express = require('express');
+const cors = require('cors');
+const cookieParser = require('cookie-parser');
+const jwt = require('jsonwebtoken');
 const { pbkdf2Sync } = require('node:crypto');
-const session = require('express-session');
+
+const instrutorRoutes = require('./routes/InstructorRoutes');
 
 const db = require("./db");
 
 const app = express();
 const PORT = 3000;
 
-app.use(cors());
 app.use(express.json());
-app.use(session({
-  secret: 'SECRET KEY',
-  resave: false,
-  saveUninitialized: true
-}))
+app.use(cookieParser());
 
-function isAuthenticated(req, res, next) {
-  if(req.session.user) next()
-  else next('Não autenticado!')
-}
+app.use(cors({
+  origin: "http://localhost:5173",
+  credentials: true,
+}));
+
+app.use('/instructor', instrutorRoutes);
 
 app.get("/", (req, res) => {
   res.send(`App is running!`);
@@ -100,38 +100,27 @@ app.post('/login', (req, res) => {
       }
     }
 
-    req.session.regenerate((err) => {
-      if(err) return res.status(401).json(err)
+    const token = jwt.sign({
+      id: result[0]['usu_id'],
+      tipo: result[0]['usu_tipo']
+    }, 'jkey')
 
-      const user = usrType();
+    const user = usrType();
 
-      req.session.user = user;
+    res.cookie('token', token);
 
-      req.session.save((err) => {
-        if(err) return res.status(401).json(err);
-
-        return res.json(user);
-      })
-
-    })
+    return res.json(user);
 
   })
 
 });
 
 app.get('/logout', (req, res) => {
-  req.session.user = null;
+  res.clearCookie("token");
 
-  req.session.save((err) => {
-    if(err) return res.status(400).json(err);
-
-    req.session.regenerate((err) => {
-      if(err) return res.status(400).json(err)
-
-      return res.json('Logout successful')
-    })
-  })
+  return res.json('Deslogado com sucesso!')
 })
+
 
 
 app.listen(PORT, () => {

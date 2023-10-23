@@ -10,9 +10,9 @@ function App() {
 
   useEffect(() => {
 
-    if(user?.tipo == 'estudante') navigate('/courses');
+    if(user?.tipo == 'estudante') navigate('/student');
 
-    if(user?.tipo == 'instrutor') navigate('/instrutor');
+    if(user?.tipo == 'instrutor') navigate('/instructor');
 
     if(user?.tipo == 'admin') navigate('/admin');
 
@@ -22,9 +22,6 @@ function App() {
 
   return (
     <AuthContext.Provider value={{ user, setUser }}>
-      <button onClick={() => {
-        console.log(user)
-      }}>Eoq</button>
       <Outlet />
     </AuthContext.Provider>
   );
