@@ -1,13 +1,13 @@
 import React from 'react'
-import Navbar from '../components/Navbar'
+// import Navbar from '../components/Navbar'
 import { Outlet } from 'react-router-dom'
 
 const AdminDashboard = () => {
   return (
-    <div>
-      <Navbar userType={'admin'} />
+    <>
+      {/* <Navbar userType={'admin'} /> */}
       <Outlet />
-    </div>
+    </>
   )
 }
 

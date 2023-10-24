@@ -33,10 +33,10 @@ const Navbar = ({ userType, login, signup, instructorSignup }) => {
               <Link to={'/student'}>
                 Home
               </Link>
-              <Link to={'subscriptions'}>
+              <Link to={'/student/subscriptions'}>
                 Inscrições
               </Link>
-              <Link to={'explore'}>
+              <Link to={'/student/explore'}>
                 Explorar
               </Link>
 
@@ -52,7 +52,7 @@ const Navbar = ({ userType, login, signup, instructorSignup }) => {
               <Link to={'/instructor'}>
                 Home
               </Link>
-              <Link to={'courses'}>
+              <Link to={'/instructor/courses'}>
                 Meus cursos
               </Link>
 
@@ -68,13 +68,13 @@ const Navbar = ({ userType, login, signup, instructorSignup }) => {
               <Link to={'/admin'}>
                 Home
               </Link>
-              <Link to={'users'}>
+              <Link to={'/admin/users'}>
                 Usuários
               </Link>
-              <Link to={'courses'}>
+              <Link to={'/admin/courses'}>
                 Cursos
               </Link>
-              <Link to={'badges'}>
+              <Link to={'/admin/badges'}>
                 Insígnias
               </Link>
 

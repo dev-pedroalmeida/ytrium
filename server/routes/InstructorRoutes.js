@@ -28,4 +28,28 @@ router.get("/courses", isAuthenticated, (req, res) => {
   });
 })
 
+router.post("/newCourse", isAuthenticated, (req, res) => {
+
+  const { id } = jwt.verify(req.cookies.token, 'jkey');
+
+  const course = [
+    id,
+    req.body.titulo,
+    req.body.experiencia,
+    req.body.descricao,
+    0,
+    'pendente',
+  ]
+
+  const q = "INSERT INTO cur_curso (`cur_instrutorId`, `cur_titulo`, `cur_qtdExperiencia`, `cur_descricao`, `cur_qtdInscritos`, `cur_status`) VALUES (?)";
+
+  db.query(q, [course], (err, result) => {
+    if(err) {
+      return res.status(400).json(err);
+    }
+
+    return res.json(result);
+  })
+})
+
 module.exports = router;

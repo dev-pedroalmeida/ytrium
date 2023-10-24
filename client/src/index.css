@@ -12,6 +12,11 @@
   --border-color: #e5e7eb;
 }
 
+body {
+  margin: 0;
+  font-size: .9em;
+}
+
 a {
   font-weight: 500;
   text-decoration: inherit;
@@ -23,8 +28,42 @@ a:hover {
   color: var(--color-hover);
 }
 
-body {
-  margin: 0;
+form {
+  min-width: 350px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 32px;
+  background-color: white;
+  /* border: 1px solid var(--border-color);
+  border-radius: 8px; */
+}
 
-  font-size: .9em;
+label {
+  display: flex;
+  flex-direction: column;
+  color: var(--color-primary);
+}
+
+label.row {
+  flex-direction: row;
+  align-items: center;
+  
+  gap: 8px;
+}
+
+input, textarea {
+  /* min-width: 350px; */
+  margin: 8px 0;
+  padding: 8px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+
+  flex: 1;
+  resize: none;
+}
+
+input:focus, textarea:focus {
+  border-color: var(--color-hover);
+  outline: transparent;
 }

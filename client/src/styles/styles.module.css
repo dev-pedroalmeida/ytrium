@@ -1,3 +1,16 @@
+.overlay {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    backdrop-filter: blur(4px);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .btn {
     box-sizing: border-box;
     height: 32px;
@@ -13,6 +26,9 @@
     box-shadow: 0px 1px 8px -3px rgba(0,0,0,0.1);
 
     transition: all .2s ease;
+
+    display: grid;
+    grid-auto-flow: column;
 }
 
 .btn:hover {
@@ -47,11 +63,104 @@
     padding: 32px 64px;
     border: 1px solid var(--border-color);
     border-radius: 8px;
-    height: 70vh;
+    min-height: 70vh;
+}
+
+.landingContainer {
+    margin: 48px 96px;
+    padding: 32px 64px;
+    /* border: 1px solid var(--border-color);
+    border-radius: 8px; */
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    color: var(--color-primary);
+    font-size: 1.2em;
+}
+
+.landingColumn {
+  width: 45%;
 }
 
 .containerHeader {
     display: flex;
     align-items: center;
     justify-content: space-between;
+}
+
+.formSection {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+}
+
+.formColumn {
+  width: 50%;
+}
+
+.error {
+  background-color: rgba(255, 50, 50, 0.082);
+  color: rgb(255, 2, 2);
+  border-radius: 8px;
+  padding: 8px;
+}
+
+.coursesList {
+  height: 160px;
+  display: flex;
+  gap: 16px;
+}
+
+.courseCard {
+  width: 250px;
+  height: 125px;
+  border: 1px solid var(--border-color);
+  padding: 12px;
+  border-radius: 8px;
+  
+}
+
+.courseContent {
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.courseTitle {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--background-primary);
+  padding-bottom: 16px;
+}
+
+.courseTitle:hover {
+  text-decoration: underline;
+}
+
+.courseCategoria {
+  width: min-content;
+  padding: 2px;
+  font-size: .8rem;
+  color: var(--background-primary);
+  border: 2px solid var(--background-primary);
+  border-radius: 4px;
+}
+
+.courseFooter {
+  padding-top: 8px;
+}
+
+.moduleList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.module {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
 }

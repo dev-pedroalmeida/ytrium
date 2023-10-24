@@ -8,6 +8,10 @@ header {
     justify-content: space-between;
 }
 
+.btnGroup {
+  display: flex;
+}
+
 header .btnGroup > *:not(:last-child) {
     margin-right: 8px;
 }

@@ -2,6 +2,7 @@ import "./App.css";
 import { AuthContext } from "./contexts/AuthContext";
 import { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
+import Navbar from './components/Navbar';
 
 function App() {
   const [user, setUser] = useState();
@@ -22,6 +23,12 @@ function App() {
 
   return (
     <AuthContext.Provider value={{ user, setUser }}>
+      {
+        user?.tipo 
+          &&
+        <Navbar userType={user?.tipo} />
+      }
+      
       <Outlet />
     </AuthContext.Provider>
   );

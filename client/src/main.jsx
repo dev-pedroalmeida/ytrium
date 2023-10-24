@@ -18,6 +18,8 @@ import AdminHome from "./pages/AdminHome";
 import AdminUsersList from "./pages/AdminUsersList";
 import AdminCoursesList from "./pages/AdminCoursesList";
 import AdminBadges from "./pages/AdminBadges";
+import NewCourse from "./pages/NewCourse";
+import CoursePage from "./pages/CoursePage";
 
 const router = createBrowserRouter([
   {
@@ -28,6 +30,10 @@ const router = createBrowserRouter([
       {
         path: "/landing",
         element: <LandingPage />,
+      },
+      {
+        path: "/course/:courseId",
+        element: <CoursePage />,
       },
       {
         path: "/student",
@@ -59,6 +65,10 @@ const router = createBrowserRouter([
             path: "courses",
             element: <InstructorCourses />,
           },
+          {
+            path: "new-course",
+            element: <NewCourse />,
+          }
         ]
       },
       {

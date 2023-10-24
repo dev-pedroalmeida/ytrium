@@ -4,7 +4,9 @@ const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
 const { pbkdf2Sync } = require('node:crypto');
 
-const instrutorRoutes = require('./routes/InstructorRoutes');
+const instrutorRoutes = require('./routes/instructorRoutes');
+const adminRoutes = require('./routes/adminRoutes');
+const courseRoutes = require('./routes/courseRoutes');
 
 const db = require("./db");
 
@@ -20,6 +22,8 @@ app.use(cors({
 }));
 
 app.use('/instructor', instrutorRoutes);
+app.use('/admin', adminRoutes);
+app.use('/course', courseRoutes);
 
 app.get("/", (req, res) => {
   res.send(`App is running!`);
@@ -45,9 +49,8 @@ app.post("/signup", (req, res) => {
 
     return res.json(result);
   })
-
-
 });
+
 
 app.post('/login', (req, res) => {
 
@@ -62,13 +65,6 @@ app.post('/login', (req, res) => {
       res.statusCode = 400;
       return res.json();
     }
-
-    const hash = pbkdf2Sync(req.body.senha, '10', 1000, 32, 'sha512').toString('hex');
-
-    if(hash !== result[0]['usu_senha']) {
-      res.statusCode = 400;
-      return res.json();
-    } 
 
     function usrType() {
       switch(result[0]['usu_tipo']) {
@@ -98,6 +94,14 @@ app.post('/login', (req, res) => {
             tipo: result[0]['usu_tipo']
           }
       }
+    }
+
+
+    const hash = pbkdf2Sync(req.body.senha, '10', 1000, 32, 'sha512').toString('hex');
+
+    if(hash !== result[0]['usu_senha']) {
+      res.statusCode = 400;
+      return res.json();
     }
 
     const token = jwt.sign({

@@ -1,11 +1,11 @@
 import React from 'react'
-import Navbar from '../components/Navbar'
+// import Navbar from '../components/Navbar'
 import { Outlet } from 'react-router-dom'
 
 const InstructorDashboard = () => {
   return (
     <>
-      <Navbar userType={'instrutor'} />
+      {/* <Navbar userType={'instrutor'} /> */}
       <Outlet />
     </>
   )

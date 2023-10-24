@@ -37,12 +37,14 @@ const SignupForm = ( {userType = 'estudante', closeForm, login} ) => {
       .catch(err => {
         console.log(err);
         if(err.response.status == 400) {
-          setError("Email já cadastrado!")
+          return setError("Email já cadastrado!")
         }
       })
       .then(res => {
         console.log(res);
-        login();
+        if(res.status == 200) {
+          login();
+        }
       })
     } else {
       setError("As senhas devem ser iguais!")
@@ -51,15 +53,15 @@ const SignupForm = ( {userType = 'estudante', closeForm, login} ) => {
   }
   
   return (
-    <div className={lsStyles.overlay}>
-      <form id='signupform' onSubmit={handleSignup}>
+    <div className={styles.overlay}>
+      <form id='signupform' className={lsStyles.lsform} onSubmit={handleSignup}>
         <div className={lsStyles.formTitle}>
           Inscreva-se
           <p className={lsStyles.formLegend}>
             Torne-se um {userType}!
           </p>
         </div>
-        {error && <div className={lsStyles.error}>{error}</div>}
+        {error && <div className={styles.error}>{error}</div>}
         <label>
           Nome:
           <input required name='nome' type='text' placeholder='Nome Exemplo' onChange={handleInput} />
