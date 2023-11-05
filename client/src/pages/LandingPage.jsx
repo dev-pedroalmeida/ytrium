@@ -11,8 +11,9 @@ const LandingPage = () => {
   const [login, setLogin] = useState(false);
   const [signUser, setSignUser] = useState('estudante');
 
+
   return (
-    <>
+    <div>
         <Navbar userType={undefined} 
                 login={() => {
                   setSignup(false)
@@ -60,7 +61,7 @@ const LandingPage = () => {
           </div>
         </div>
         
-    </>
+    </div>
   )
 }
 

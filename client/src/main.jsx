@@ -5,21 +5,22 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import App from "./App.jsx";
 import ErrorPage from "./pages/ErrorPage.jsx";
-import StudentDashboard from "./pages/StudentDashboard";
+import StudentDashboard from "./pages/student/StudentDashboard";
 import CoursesPage from "./pages/CoursesPage.jsx";
-import SubscriptionsPage from "./pages/SubscriptionsPage.jsx";
+import SubscriptionsPage from "./pages/student/SubscriptionsPage.jsx";
 import LandingPage from "./pages/LandingPage.jsx";
-import InstructorDashboard from "./pages/InstructorDashboard";
-import AdminDashboard from "./pages/AdminDashboard";
-import InstructorCourses from "./pages/InstructorCourses";
-import StudentHome from "./pages/StudentHome";
-import InstructorHome from "./pages/InstructorHome";
-import AdminHome from "./pages/AdminHome";
-import AdminUsersList from "./pages/AdminUsersList";
-import AdminCoursesList from "./pages/AdminCoursesList";
-import AdminBadges from "./pages/AdminBadges";
-import NewCourse from "./pages/NewCourse";
+import InstructorDashboard from "./pages/instructor/InstructorDashboard";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import InstructorCourses from "./pages/instructor/InstructorCourses";
+import StudentHome from "./pages/student/StudentHome";
+import InstructorHome from "./pages/instructor/InstructorHome";
+import AdminHome from "./pages/admin/AdminHome";
+import AdminUsersList from "./pages/admin/AdminUsersList";
+import AdminCoursesList from "./pages/admin/AdminCoursesList";
+import AdminBadges from "./pages/admin/AdminBadges";
+import NewCourse from "./pages/instructor/NewCourse";
 import CoursePage from "./pages/CoursePage";
+import AdminCategories from "./pages/admin/AdminCategories";
 
 const router = createBrowserRouter([
   {
@@ -90,6 +91,10 @@ const router = createBrowserRouter([
           {
             path: "badges",
             element: <AdminBadges />
+          },
+          {
+            path: "categories",
+            element: <AdminCategories />
           }
         ]
       }

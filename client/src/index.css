@@ -1,7 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700&display=swap');
 
 :root {
-  font-family: 'Noto Sans', sans-serif;
+  /* font-family: 'Noto Sans', sans-serif; */
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 
   --color-primary: #1f1f1f;
   --color-secondary: #808080;
@@ -10,11 +11,17 @@
   --background-primary: #fbb42a;
   --background-secondary: #ffbe3c;
   --border-color: #e5e7eb;
+  --bg-light: #fafafa;
+  --bg-light-secondary: #dddddd; 
+  --bg-light-hover: #f5f5f5;
 }
 
 body {
   margin: 0;
   font-size: .9em;
+  min-height: 100vh;
+  background-color: #fffbf4;
+  background-image: linear-gradient(43deg, #fdf6ee 0%, hsla(36, 100%, 70%, 0.733) 76%, #ffeecf 100%);
 }
 
 a {
@@ -35,25 +42,26 @@ form {
   gap: 16px;
   padding: 32px;
   background-color: white;
-  /* border: 1px solid var(--border-color);
-  border-radius: 8px; */
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
 }
 
 label {
   display: flex;
   flex-direction: column;
   color: var(--color-primary);
+  width: 100%;
+  
 }
 
 label.row {
   flex-direction: row;
   align-items: center;
-  
+  width: 100%;
   gap: 8px;
 }
 
 input, textarea {
-  /* min-width: 350px; */
   margin: 8px 0;
   padding: 8px;
   border: 1px solid var(--border-color);
@@ -66,4 +74,36 @@ input, textarea {
 input:focus, textarea:focus {
   border-color: var(--color-hover);
   outline: transparent;
+}
+
+.tableContainer {
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead {
+  text-align: left;
+}
+
+th {
+  padding: 8px 16px;
+}
+
+td {
+  border-top: 1px solid var(--border-color);
+  padding: 8px 16px;
+}
+
+td.actions {
+  text-align: right;
+}
+
+tr:hover {
+  background-color: var(--bg-light-hover);
 }

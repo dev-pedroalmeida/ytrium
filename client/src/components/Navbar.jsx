@@ -77,6 +77,9 @@ const Navbar = ({ userType, login, signup, instructorSignup }) => {
               <Link to={'/admin/badges'}>
                 Insígnias
               </Link>
+              <Link to={'/admin/categories'}>
+                Categorias
+              </Link>
 
             </div>
             <ProfileIcon />

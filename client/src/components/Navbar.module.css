@@ -6,6 +6,11 @@ header {
     display: flex;
     align-items: center;
     justify-content: space-between;
+
+    position: sticky;
+    top: 0;
+    background-color: #ffffff;
+    /* backdrop-filter: blur(8px); */
 }
 
 .btnGroup {

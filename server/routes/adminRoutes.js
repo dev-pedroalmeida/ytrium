@@ -38,4 +38,56 @@ router.put("/publishCourse", isAuthenticated, (req, res) => {
   });
 })
 
+router.post("/createCategory", isAuthenticated, (req, res) => {
+  
+  const q = "INSERT INTO cat_categoria (`cat_descricao`) VALUES (?)";
+  db.query(q, [req.body.descricao], (err, result) => {
+    if(err){
+      return res.status(400).json(err);
+    }
+    return res.json(result);
+
+  })
+})
+
+router.get("/categories", isAuthenticated, (req, res) => {
+
+  const q = "SELECT * FROM cat_categoria";
+  db.query(q, (err, result) => {
+    if(err) {
+      return res.status(400).json(err);
+    }
+    return res.json(result);
+
+  })
+})
+
+router.put("/editCategory/:id", isAuthenticated, (req, res) => {
+
+  const id = req.params.id;
+
+  const q = `UPDATE cat_categoria SET cat_descricao = ? WHERE cat_id = ${id}`;
+  db.query(q, [req.body.descricao], (err, result) => {
+    if(err) {
+      return res.status(400).json(err);
+    }
+    return res.json(result);
+
+  })
+})
+
+router.delete("/deleteCategory/:id", isAuthenticated, (req, res) => {
+
+  const id = req.params.id;
+
+  const q = `DELETE FROM cat_categoria WHERE cat_id = ${id}`;
+  db.query(q, (err, result) => {
+    if(err) {
+      return res.status(400).json(err);
+    }
+    return res.json(result);
+
+  })
+})
+
 module.exports = router;

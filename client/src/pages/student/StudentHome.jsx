@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import styles from '../styles/styles.module.css';
+import styles from '../../styles/styles.module.css';
 import { Link, useNavigate } from 'react-router-dom';
-import PlusIcon from '../assets/PlusIcon';
+import axios from 'axios';
 
-const InstructorHome = () => {
+const StudentHome = () => {
 
   const [courses, setCourses] = useState([]);
 
@@ -22,15 +21,9 @@ const InstructorHome = () => {
         </div>
 
         <div className={styles.courseFooter}>
-          {course.cur_status == 'pendente' ?
-            <p>Curso pendente</p>
-            :
-            <p>
-              {course.cur_qtdInscritos}
-              &nbsp;
-              inscritos
-            </p>
-          }
+          <p>
+            {course.cur_qtdInscritos}
+          </p>
         </div>
       </div>
     )
@@ -38,7 +31,7 @@ const InstructorHome = () => {
 
 
   useEffect(() => {
-    axios.get("http://localhost:3000/instructor/courses", {
+    axios.get("http://localhost:3000/course/getAll", {
       withCredentials: true,
     })
     .then(res => {
@@ -49,14 +42,7 @@ const InstructorHome = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.containerHeader}>
-        <h1>Seus cursos</h1>
-        <button className={styles.btn} onClick={() => navigate('new-course')}>
-          Novo
-          <PlusIcon />
-        </button>
-      </div>
-
+      <h1>Novos cursos</h1>
       <div className={styles.coursesList}>
         {
         courses.length > 0 
@@ -66,8 +52,14 @@ const InstructorHome = () => {
           <p>Nenhum curso encontrado!</p>
         }
       </div>
+
+      {/* <h1>Populares</h1>
+      <div className={styles.coursesList}>
+
+        <p>Nenhum curso encontrado!</p>
+      </div> */}
     </div>
   )
 }
 
-export default InstructorHome
+export default StudentHome

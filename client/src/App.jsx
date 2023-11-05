@@ -3,6 +3,7 @@ import { AuthContext } from "./contexts/AuthContext";
 import { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import Navbar from './components/Navbar';
+import axios from "axios";
 
 function App() {
   const [user, setUser] = useState();
@@ -17,7 +18,20 @@ function App() {
 
     if(user?.tipo == 'admin') navigate('/admin');
 
-    if(user == null) navigate('/landing');
+    if(user == null) {
+
+      axios.get('http://localhost:3000/',{
+        withCredentials: true,
+      })
+      .then(res => {
+        console.log(res);
+        if(res.data.auth == 1) {
+          setUser(res.data.user);
+        } else {
+          navigate('/landing');
+        }
+      })     
+    } 
 
   }, [ user ])
 

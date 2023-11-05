@@ -3,9 +3,9 @@ import { AuthContext } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import styles from "../styles/styles.module.css";
-import lsStyles from "./LogSignForm.module.css";
 
 const LoginForm = ({ closeForm }) => {
+  
   const { setUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -50,10 +50,10 @@ const LoginForm = ({ closeForm }) => {
 
   return (
     <div className={styles.overlay}>
-      <form id="loginform" className={lsStyles.lsform} onSubmit={handleLogin}>
-        <div className={lsStyles.formTitle}>
+      <form id="loginform" className={styles.lsform} onSubmit={handleLogin}>
+        <div className={styles.formTitle}>
           Login
-          <p className={lsStyles.formLegend}>Insira seus dados!</p>
+          <p className={styles.formLegend}>Insira seus dados!</p>
         </div>
         {error && <div className={styles.error}>{error}</div>}
         <label>

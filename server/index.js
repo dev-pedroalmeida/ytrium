@@ -26,7 +26,14 @@ app.use('/admin', adminRoutes);
 app.use('/course', courseRoutes);
 
 app.get("/", (req, res) => {
-  res.send(`App is running!`);
+  if(req.cookies.token) {
+    const { iat, ...user } = jwt.verify(req.cookies.token, 'jkey');
+    return res.json({
+      auth: 1,
+      user: user,
+    });
+  }
+  res.json({auth: 0,});
 });
 
 app.post("/signup", (req, res) => {
@@ -104,12 +111,9 @@ app.post('/login', (req, res) => {
       return res.json();
     }
 
-    const token = jwt.sign({
-      id: result[0]['usu_id'],
-      tipo: result[0]['usu_tipo']
-    }, 'jkey')
-
     const user = usrType();
+
+    const token = jwt.sign(user, 'jkey');
 
     res.cookie('token', token);
 

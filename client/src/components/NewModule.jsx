@@ -27,6 +27,9 @@ const NewModule = ( {saveModule, cancelar} ) => {
   return (
     <div className={styles.overlay}>
       <form onSubmit={handleNewModule}>
+        <div className={styles.formTitle}>
+          Novo módulo
+        </div>
         <label>
           Insira o título do módulo:
           <input type="text" name="titulo" onChange={handleInput}  />

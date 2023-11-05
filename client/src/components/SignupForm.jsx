@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import axios from 'axios';
 import styles from "../styles/styles.module.css";
-import lsStyles from "./LogSignForm.module.css";
 
 const SignupForm = ( {userType = 'estudante', closeForm, login} ) => {
   
@@ -54,10 +53,10 @@ const SignupForm = ( {userType = 'estudante', closeForm, login} ) => {
   
   return (
     <div className={styles.overlay}>
-      <form id='signupform' className={lsStyles.lsform} onSubmit={handleSignup}>
-        <div className={lsStyles.formTitle}>
+      <form id='signupform' className={styles.lsform} onSubmit={handleSignup}>
+        <div className={styles.formTitle}>
           Inscreva-se
-          <p className={lsStyles.formLegend}>
+          <p className={styles.formLegend}>
             Torne-se um {userType}!
           </p>
         </div>
