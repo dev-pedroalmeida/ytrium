@@ -61,7 +61,9 @@ const AdminHome = () => {
 
   return (
     <div className={styles.container}>
-      <h1>Cursos pendentes</h1>
+      <div className={styles.containerHeader}>
+        <h1>Cursos pendentes</h1>
+      </div>
 
       <div className={styles.coursesList}>
         {

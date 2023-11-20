@@ -42,7 +42,9 @@ const StudentHome = () => {
 
   return (
     <div className={styles.container}>
-      <h1>Novos cursos</h1>
+      <div className={styles.containerHeader}>
+        <h1>Novos cursos</h1>
+      </div>
       <div className={styles.coursesList}>
         {
         courses.length > 0 

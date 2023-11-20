@@ -11,14 +11,23 @@ const InstructorHome = () => {
   const navigate = useNavigate();
 
   const coursesList = courses.map(course => {
+    
+    const catArr = course.categorias.replace("[", "").replace("]", "").replaceAll("\"", "").split(", ");    
+
     return (
       <div className={styles.courseCard} key={course.cur_id}>
         <div className={styles.courseContent}>
           <Link to={`/course/${course.cur_id}`}>
             <div className={styles.courseTitle}>{course.cur_titulo}</div>
           </Link>
-
-          <div className={styles.courseCategoria}>Categoria</div>
+          
+          <div className={styles.courseCategoriasList}>
+            {
+              catArr.map((cat, index) => {
+                return <div key={index} className={styles.courseCategoria}>{cat}</div>
+              })
+            }
+          </div>
         </div>
 
         <div className={styles.courseFooter}>
@@ -42,7 +51,7 @@ const InstructorHome = () => {
       withCredentials: true,
     })
     .then(res => {
-      console.log(res)
+      console.log(res.data)
       setCourses(res.data);
     })
   }, [])

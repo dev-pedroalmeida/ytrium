@@ -22,7 +22,8 @@
   box-sizing: border-box;
   height: 32px;
   /* min-width: 80px; */
-  padding: 8px 22px;
+  /* width: fit-content; */
+  padding: 8px 12px;
   background-color: var(--background-primary);
   outline: transparent;
   border: transparent;
@@ -38,6 +39,7 @@
   display: grid;
   grid-auto-flow: column;
   align-items: center;
+  gap: 4px;
 }
 
 .btn:hover {
@@ -57,13 +59,9 @@
 
 .btnSecondary {
   composes: btn;
-  background-color: #fff;
+  background-color: rgb(255, 247, 237);
   color: #141414;
-  border: 1px solid #e5e7eb;
-}
-
-.btnSecondary:hover {
-  filter: drop-shadow(2px 2px 1px rgba(0, 0, 0, 0.075));
+  border: 1px solid var(--background-primary);
 }
 
 .btnText {
@@ -84,12 +82,16 @@
 }
 
 .container {
-  margin: 48px 96px;
-  min-height: 70vh;
+  margin: 28px 56px;
+  height: 80vh;
   padding: 20px 40px;
   border: 1px solid var(--border-color);
   border-radius: 8px;
   background-color: #fff;
+
+  overflow-x: hidden;
+
+  overflow-y: auto;
 }
 
 .landingContainer {
@@ -122,6 +124,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-bottom: 16px;
 }
 
 .borderless {
@@ -145,6 +148,58 @@
   align-items: center;
   justify-content: space-between;
   gap: 32px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.formHeaderSection {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+/* h1, h2, h3 {
+  margin: 12px 0 0 0;
+} */
+
+.formTabs {
+  display: flex;
+  gap: 16px;
+}
+
+.formTab {
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 1.1em;
+  color: var(--color-secondary);
+  position: relative;
+}
+
+.formTab.active, .formTab:hover {
+  color: var(--color-primary);
+}
+
+.formTab::after {
+  position: relative;
+  content: ' ';
+  display: block;
+  background-color: var(--background-primary);
+  border-radius: 12px;
+  width: 0;
+  transition: all .15s;
+  height: 4px;
+  bottom: 0;
+  left: 50%;
+}
+
+.formTab.active::after {
+  width: 40%;
+  left: 30%;
+}
+
+.hidden {
+  display: none;
 }
 
 .formSection {
@@ -194,19 +249,21 @@
   border: 1px solid var(--border-color);
   padding: 12px;
   border-radius: 8px;
-  display: inline-block;
+  display: flex;
+  flex-direction: column;
 }
 
 .courseContent {
-  padding-bottom: 16px;
+  padding-bottom: 8px;
   border-bottom: 1px solid var(--border-color);
+  flex: 1;
 }
 
 .courseTitle {
   font-size: 1.2rem;
   font-weight: 700;
   color: var(--background-primary);
-  padding-bottom: 16px;
+  padding-bottom: 8px;
 }
 
 .courseTitle:hover {
@@ -215,26 +272,111 @@
 
 .courseCategoria {
   width: min-content;
-  padding: 2px;
+  padding: 3px;
   font-size: .8rem;
   color: var(--background-primary);
   border: 2px solid var(--background-primary);
   border-radius: 4px;
 }
 
+.courseCategoriasList {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
 .courseFooter {
-  padding-top: 8px;
+  padding-top: 4px;
+}
+
+.moduleContainer {
+  display: grid;
+  grid-template-columns: 25% 1fr;
 }
 
 .moduleList {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  align-items: center;
+  padding: 0 8px 0 8px;
+  gap: 8px;
+  margin-right: 8px;
 }
 
 .module {
   width: 100%;
-  padding: 8px;
-  border: 1px solid var(--border-color);
+  padding: 4px;
   border-radius: 8px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  text-wrap: nowrap;
+
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.module span {
+  overflow-x: hidden;
+  flex: 1;
+}
+
+.module:hover {
+  background-color: var(--bg-light-hover);
+  border-color: var(--border-color);
+}
+
+.module.selected {
+  background-color: rgb(255, 246, 226);
+  border-color: var(--background-primary);
+}
+
+.moduleContent {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.alternative {
+  display: grid;
+  width: 100%;
+  align-items: center;
+  grid-template-columns: 80px 1fr 30px;
+  gap: 8px;
+}
+
+.alternative input[type="radio"] {
+  display: none;
+}
+
+.alternative span {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  margin: -1px 4px 0 0;
+  vertical-align: middle;
+  cursor: pointer;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 35px;
+  background-color: var(--background-primary);
+}
+
+.alternative span svg {
+  opacity: 0;
+  transition: all .3s ease;
+}
+
+.alternative input[type="radio"]:checked + span svg {
+  opacity: 1;
+}
+
+.log {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  cursor: pointer;
+  background-color: white;
+  padding: 4px 8px;
+  border-radius: 8px 0 0 0;
 }

@@ -16,12 +16,16 @@
   --bg-light-hover: #f5f5f5;
 }
 
-body {
+* {
   margin: 0;
-  font-size: .9em;
+  padding: 0;
+}
+
+body {
+  font-size: .8em;
   min-height: 100vh;
   background-color: #fffbf4;
-  background-image: linear-gradient(43deg, #fdf6ee 0%, hsla(36, 100%, 70%, 0.733) 76%, #ffeecf 100%);
+  background-image: linear-gradient(43deg, #ffe8ce 0%, hsla(36, 100%, 70%, 0.733) 76%, #ffeecf 100%);
 }
 
 a {
@@ -74,6 +78,10 @@ input, textarea {
 input:focus, textarea:focus {
   border-color: var(--color-hover);
   outline: transparent;
+}
+
+input[type="radio"] {
+  flex: 0 1 auto;
 }
 
 .tableContainer {
