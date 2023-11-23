@@ -18,13 +18,15 @@ router.get("/courses", isAuthenticated, (req, res) => {
 
   const { id } = jwt.verify(req.cookies.token, 'jkey');
 
-  // const q = "SELECT * FROM cur_curso WHERE cur_instrutorId = ?";
-
-  const q = "select c.cur_id, c.cur_titulo, c.cur_status, c.cur_qtdInscritos, json_arrayagg(ca.cat_descricao) as categorias from cur_curso c inner join cct_curso_categoria cc on cc.cct_cursoId = c.cur_id inner join cat_categoria ca on cc.cct_categoriaId = ca.cat_id group by c.cur_id;";
+  const q = "select c.cur_id, c.cur_titulo, c.cur_status, c.cur_qtdInscritos, json_arrayagg(ca.cat_descricao) as categorias from cur_curso c inner join cct_curso_categoria cc on cc.cct_cursoId = c.cur_id inner join cat_categoria ca on cc.cct_categoriaId = ca.cat_id inner join usu_usuario u on u.usu_id = c.cur_instrutorId where u.usu_id = ? group by c.cur_id;";
   db.query(q, id, (err, result) => {
     if(err) {
       return res.status(400).json(err);
     }
+
+    result.forEach(cur => {
+      cur.categorias = cur.categorias.replace("[", "").replace("]", "").replaceAll("\"", "").split(", ");
+    })
 
     return res.json(result);
   });
@@ -50,16 +52,16 @@ router.post("/newCourse", isAuthenticated, (req, res) => {
       course[i] === undefined ||
       course[i] === ""
     ) {
-      return res.status(400).json(`Preencha todos os campos! ${i}`)
+      res.status(400).json(`Preencha todos os campos! ${i}`)
     }
   }
   
   if(req.body.categorias.length < 1) {
-    return res.status(400).json("O curso precisa ter pelo menos uma categoria!");
+    res.status(400).json("O curso precisa ter pelo menos uma categoria!");
   }
 
   if(req.body.modulos.length < 1) {
-    return res.status(400).json("O curso precisa ter pelo menos um módulo!")
+    res.status(400).json("O curso precisa ter pelo menos um módulo!")
   }
 
 
@@ -70,7 +72,7 @@ router.post("/newCourse", isAuthenticated, (req, res) => {
 
   db.query(q, [course], (err, result) => {
     if(err) {
-      return res.status(400).json(err);
+      res.status(400).json(err);
     }
 
 
@@ -83,7 +85,7 @@ router.post("/newCourse", isAuthenticated, (req, res) => {
 
     db.query(q2, [categorias], (err2, result2) => {
       if(err2) {
-        return res.status(400).json(err2);
+        res.status(400).json(err2);
       }
 
       
@@ -98,7 +100,7 @@ router.post("/newCourse", isAuthenticated, (req, res) => {
 
       db.query(q3, [modulo], (err3, result3) => {
         if(err3) {
-          return res.status(400).json(err3);
+          res.status(400).json(err3);
         }
   
         const modId = result3.insertId;
@@ -109,7 +111,7 @@ router.post("/newCourse", isAuthenticated, (req, res) => {
 
         db.query(q4, [conteudos], (err4, result4) => {
           if(err4) {
-            return res.status(400).json(err4);
+            res.status(400).json(err4);
           }
         })
 
@@ -122,7 +124,7 @@ router.post("/newCourse", isAuthenticated, (req, res) => {
           
           db.query(q5, [quizz], (err5, result5) => {
             if(err5) {
-              return res.status(400).json(err5);
+              res.status(400).json(err5);
             }
 
             const quizzId = result5.insertId;
@@ -136,7 +138,7 @@ router.post("/newCourse", isAuthenticated, (req, res) => {
 
               db.query(q6, [questao], (err6, result6) => {
                 if(err6) {
-                  return res.status(400).json(err6);
+                  res.status(400).json(err6);
                 }
 
                 const questaoId = result6.insertId;
@@ -147,26 +149,20 @@ router.post("/newCourse", isAuthenticated, (req, res) => {
 
                 db.query(q7, [alternativas], (err7) => {
                   if(err7) {
-                    return res.status(400).json(err7);
+                    res.status(400).json(err7);
                   }
 
-                  return res.json('Curso cadastrado com sucesso!');
-
+                  // res.json('Curso cadastrado com sucesso!');
+                  
                 })
-
               })
             })
-            
-  
           })
         })
-        
       })
-
     })
-    
   })
-  
+  res.end();
 })
 
 router.get("/categories", isAuthenticated, (req, res) => {

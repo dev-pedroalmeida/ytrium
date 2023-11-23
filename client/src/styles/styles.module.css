@@ -24,7 +24,7 @@
   /* min-width: 80px; */
   /* width: fit-content; */
   padding: 8px 12px;
-  background-color: var(--background-primary);
+  background: linear-gradient(158deg, #FFB545, #FFD336);
   outline: transparent;
   border: transparent;
   border-radius: 4px;
@@ -49,7 +49,7 @@
 .btnDanger {
   composes: btn;
   color: rgb(255, 255, 255);
-  background-color: rgba(255, 15, 15, 0.863);
+  background: rgba(255, 15, 15, 0.863);
 }
 
 .btn.large {
@@ -59,7 +59,7 @@
 
 .btnSecondary {
   composes: btn;
-  background-color: rgb(255, 247, 237);
+  background: rgb(255, 247, 237);
   color: #141414;
   border: 1px solid var(--background-primary);
 }
@@ -67,7 +67,7 @@
 .btnText {
   composes: btn;
   color: var(--color-secondary);
-  background-color: transparent;
+  background: transparent;
   box-shadow: none;
 }
 
@@ -253,7 +253,7 @@
   flex-direction: column;
 }
 
-.courseContent {
+.courseCardContent {
   padding-bottom: 8px;
   border-bottom: 1px solid var(--border-color);
   flex: 1;
@@ -370,6 +370,69 @@
 .alternative input[type="radio"]:checked + span svg {
   opacity: 1;
 }
+
+.courseHeader {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 4fr 1fr;
+}
+
+.courseHeader > * {
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 16px;
+}
+
+.courseMainInfo {
+  display: flex;
+  justify-content: space-between;
+}
+
+.courseMainInfoSection {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-right: 32px;
+}
+
+.courseDificulty {
+  background: linear-gradient(158deg, #FFB545, #FFD336);
+  color: #fff;
+  padding: 8px 6px;
+  border-radius: 8px;
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+.insInfo {
+  font-size: 1.2em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.personIcon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(158deg, #FFB545, #FFD336);
+}
+
+.courseSecInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  gap: 8px;
+  border-left: 1px solid var(--border-color);
+}
+
+.courseContent {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-top: 32px;
+}
+
+
 
 .log {
   position: absolute;

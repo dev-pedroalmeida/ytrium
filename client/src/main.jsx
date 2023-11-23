@@ -21,6 +21,7 @@ import AdminBadges from "./pages/admin/AdminBadges";
 import NewCourse from "./pages/instructor/NewCourse";
 import CoursePage from "./pages/CoursePage";
 import AdminCategories from "./pages/admin/AdminCategories";
+import CourseSubscribed from "./pages/CourseSubscribed.jsx";
 
 const router = createBrowserRouter([
   {
@@ -35,6 +36,10 @@ const router = createBrowserRouter([
       {
         path: "/course/:courseId",
         element: <CoursePage />,
+      },
+      {
+        path: "/course/subscribed/:courseId",
+        element: <CourseSubscribed />
       },
       {
         path: "/student",

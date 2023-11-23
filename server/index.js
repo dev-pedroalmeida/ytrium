@@ -7,6 +7,7 @@ const { pbkdf2Sync } = require('node:crypto');
 const instrutorRoutes = require('./routes/instructorRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const courseRoutes = require('./routes/courseRoutes');
+const studentRoutes = require('./routes/studentRoutes');
 
 const db = require("./db");
 
@@ -24,6 +25,7 @@ app.use(cors({
 app.use('/instructor', instrutorRoutes);
 app.use('/admin', adminRoutes);
 app.use('/course', courseRoutes);
+app.use('/student', studentRoutes);
 
 app.get("/", (req, res) => {
   if(req.cookies.token) {

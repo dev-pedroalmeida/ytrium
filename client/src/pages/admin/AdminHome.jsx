@@ -31,10 +31,16 @@ const AdminHome = () => {
   const pendingCoursesList = pendingCourses.map(course => {
     return (
       <div className={styles.courseCard} key={course.cur_id}>
-        <div className={styles.courseContent}>
+        <div className={styles.courseCardContent}>
           <div className={styles.courseTitle}>{course.cur_titulo}</div>
 
-            <div className={styles.courseCategoria}>Categoria</div>
+          <div className={styles.courseCategoriasList}>
+            {
+              course.categorias.map((cat, index) => {
+                return <div key={index} className={styles.courseCategoria}>{cat}</div>
+              })
+            }
+          </div>
         </div>
 
         <div className={styles.courseFooter}>

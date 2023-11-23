@@ -12,18 +12,16 @@ const InstructorHome = () => {
 
   const coursesList = courses.map(course => {
     
-    const catArr = course.categorias.replace("[", "").replace("]", "").replaceAll("\"", "").split(", ");    
-
     return (
       <div className={styles.courseCard} key={course.cur_id}>
-        <div className={styles.courseContent}>
+        <div className={styles.courseCardContent}>
           <Link to={`/course/${course.cur_id}`}>
             <div className={styles.courseTitle}>{course.cur_titulo}</div>
           </Link>
           
           <div className={styles.courseCategoriasList}>
             {
-              catArr.map((cat, index) => {
+              course.categorias.map((cat, index) => {
                 return <div key={index} className={styles.courseCategoria}>{cat}</div>
               })
             }
@@ -36,8 +34,7 @@ const InstructorHome = () => {
             :
             <p>
               {course.cur_qtdInscritos}
-              &nbsp;
-              inscritos
+              &nbsp;inscritos
             </p>
           }
         </div>

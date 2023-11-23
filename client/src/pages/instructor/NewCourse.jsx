@@ -94,9 +94,9 @@ const NewCourse = () => {
       })
       .then((res) => {
         console.log(res);
-        // if(res.status == 200) {
-        //   navigate('/instructor');
-        // }
+        if(res.status == 200) {
+          navigate('/instructor');
+        }
       });
   };
 
@@ -439,9 +439,7 @@ const NewCourse = () => {
         />
       )}
 
-      <div className={styles.log} onClick={() => console.log(modulos)}>
-          logger
-      </div>
+      
     </div>
   );
 };

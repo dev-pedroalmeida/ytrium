@@ -12,17 +12,24 @@ const StudentHome = () => {
   const coursesList = courses.map(course => {
     return (
       <div className={styles.courseCard} key={course.cur_id}>
-        <div className={styles.courseContent}>
+        <div className={styles.courseCardContent}>
           <Link to={`/course/${course.cur_id}`}>
             <div className={styles.courseTitle}>{course.cur_titulo}</div>
           </Link>
 
-          <div className={styles.courseCategoria}>Categoria</div>
+          <div className={styles.courseCategoriasList}>
+            {
+              course.categorias.map((cat, index) => {
+                return <div key={index} className={styles.courseCategoria}>{cat}</div>
+              })
+            }
+          </div>
         </div>
 
         <div className={styles.courseFooter}>
           <p>
             {course.cur_qtdInscritos}
+            &nbsp;inscritos
           </p>
         </div>
       </div>
@@ -55,11 +62,6 @@ const StudentHome = () => {
         }
       </div>
 
-      {/* <h1>Populares</h1>
-      <div className={styles.coursesList}>
-
-        <p>Nenhum curso encontrado!</p>
-      </div> */}
     </div>
   )
 }

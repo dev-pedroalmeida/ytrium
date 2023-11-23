@@ -16,11 +16,15 @@ function isAuthenticated(req, res, next) {
 
 router.get("/pendingCourses", isAuthenticated, (req, res) => {
 
-  const q = "SELECT * FROM cur_curso WHERE cur_status='pendente'";
+  const q = "select c.cur_id, c.cur_titulo, c.cur_status, c.cur_qtdInscritos, json_arrayagg(ca.cat_descricao) as categorias from cur_curso c inner join cct_curso_categoria cc on cc.cct_cursoId = c.cur_id inner join cat_categoria ca on cc.cct_categoriaId = ca.cat_id where c.cur_status = 'pendente' group by c.cur_id;";
   db.query(q, (err, result) => {
     if(err) {
       return res.status(400).json(err);
     }
+
+    result.forEach(cur => {
+      cur.categorias = cur.categorias.replace("[", "").replace("]", "").replaceAll("\"", "").split(", ");
+    })
 
     return res.json(result);
   });
