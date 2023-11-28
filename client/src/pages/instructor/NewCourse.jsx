@@ -8,14 +8,21 @@ import Select from "react-select";
 import ContentModal from "../../components/ContentModal";
 import QuizzModal from "../../components/QuizzModal";
 import DeleteIcon from "../../assets/DeleteIcon";
+import DescEditor from "../../components/DescEditor";
+import { withHistory } from "slate-history";
+import { withReact } from "slate-react";
+import { createEditor } from "slate";
 
 const NewCourse = () => {
 
   const [newCourse, setNewCourse] = useState({
     titulo: "",
-    experiencia: "",
-    descricao: "",
   });
+
+  const handleInput = (e) => {
+    setError();
+    setNewCourse((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
 
   const [modulos, setModulos] = useState([]);
   const [dificuldade, setDificuldade] = useState({});
@@ -32,12 +39,16 @@ const NewCourse = () => {
   const [categories, setCategories] = useState();
 
   const [listConQuizz, setListConQuizz] = useState([]);
-
-  const handleInput = (e) => {
-    setNewCourse((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  };
+  const editor = useMemo(() => withHistory(withReact(createEditor())), [])
+  const [desc, setDesc] = useState([
+    {
+      type: "paragraph",
+      children: [{ text: "Insira uma descrição!" }]
+    }
+  ]);
 
   const [error, setError] = useState();
+
 
   const navigate = useNavigate();
 
@@ -55,18 +66,19 @@ const NewCourse = () => {
     }),
   };
 
-  const handleNewCourse = (e) => {
+  async function handleNewCourse(e) {
     e.preventDefault();
     setError();
 
     let courseData = {
       titulo: newCourse.titulo,
-      descricao: newCourse.descricao,
+      descricao: JSON.stringify(desc),
       dificuldade: dificuldade.value,
       experiencia: dificuldade.xp,
       categorias: selectedCategories,
-      modulos: modulos,
     };
+
+    console.log(courseData);
 
     for (let i in courseData) {
       if (
@@ -80,24 +92,47 @@ const NewCourse = () => {
       }
     }
 
-    console.log(courseData);
+    courseData.modulos = modulos;
 
-    axios
-      .post("http://localhost:3000/instructor/newCourse", courseData, {
-        withCredentials: true,
-      })
-      .catch((err) => {
-        console.log(err);
-        if (err.response.status == 400) {
-          return setError("Erro!");
-        }
-      })
-      .then((res) => {
-        console.log(res);
-        if(res.status == 200) {
-          navigate('/instructor');
-        }
-      });
+    if(courseData.modulos.length < 1) {
+      setError("O curso precisa de pelo menos um módulo!");
+      setCurrentTab(2);
+      return;
+    }
+
+    courseData.modulos.forEach(mod => {
+      if(mod.conteudos.length <= 0) {
+        setError("Cada módulo precisa de pelo menos um conteúdo!");
+        setCurrentTab(2);
+        return;
+      }
+    })
+    
+    
+    setTimeout(() => {
+      if(error == false ||
+        error == undefined ||
+        error == '') {
+        axios
+        .post("http://localhost:3000/instructor/newCourse", courseData, {
+          withCredentials: true,
+        })
+        .catch((err) => {
+          console.log(err);
+          if (err.response.status == 400) {
+            return setError("Erro!");
+          }
+        })
+        .then((res) => {
+          console.log(res);
+          if(res.status == 200) {
+            navigate('/instructor');
+          }
+        });
+      }
+    }, 1000)
+    
+
   };
 
   useEffect(() => {
@@ -140,7 +175,10 @@ const NewCourse = () => {
             className={
               styles.formTab + " " + (currentTab == 1 && styles.active)
             }
-            onClick={() => setCurrentTab(1)}
+            onClick={() => {
+              setError();
+              setCurrentTab(1)
+            }}
           >
             Informações básicas
           </div>
@@ -148,7 +186,10 @@ const NewCourse = () => {
             className={
               styles.formTab + " " + (currentTab == 2 && styles.active)
             }
-            onClick={() => setCurrentTab(2)}
+            onClick={() => {
+              setError();
+              setCurrentTab(2)
+            }}
           >
             Módulos
           </div>
@@ -157,7 +198,7 @@ const NewCourse = () => {
         {error && <div className={styles.error}>{error}</div>}
 
         <div className={currentTab != 1 ? styles.hidden : ""}>
-          <div className={styles.formSection}>
+          <div className={styles.formSection} style={{position: 'relative',zIndex: 3}}>
             <div className={styles.formColumn}>
               <label>
                 Título
@@ -178,7 +219,10 @@ const NewCourse = () => {
                     },
                   })}
                   styles={selectStyles}
-                  onChange={(e) => setDificuldade(e)}
+                  onChange={(e) => {
+                    setError();
+                    setDificuldade(e)
+                  }}
                 />
               </label>
             </div>
@@ -200,7 +244,10 @@ const NewCourse = () => {
                     },
                   })}
                   styles={selectStyles}
-                  onChange={(e) => setSelectedCategories([...e])}
+                  onChange={(e) => {
+                    setSelectedCategories([...e])
+                    setError();
+                  }}
                 />
               </label>
             </div>
@@ -209,12 +256,24 @@ const NewCourse = () => {
           <div className={styles.formSection}>
             <label>
               Descrição
-              <textarea
+
+              {/* <textarea
                 name="descricao"
                 onChange={handleInput}
                 cols="30"
                 rows="8"
-              ></textarea>
+              ></textarea> */}
+              
+              <DescEditor 
+                initialValue={desc}
+                onChange={(newDesc) => {
+                  setDesc(newDesc)
+                  setError();
+                }}
+                editor={editor} 
+              />
+              
+
             </label>
           </div>
         </div>
@@ -224,7 +283,10 @@ const NewCourse = () => {
             <button
               type="button"
               className={styles.btn}
-              onClick={() => setNewModule(true)}
+              onClick={() => {
+                setNewModule(true)
+                setError();
+              }}
             >
               Adicionar módulo
               <PlusIcon />
@@ -250,6 +312,7 @@ const NewCourse = () => {
                     </span>
                     <button type="button" className={styles.btnText}
                       onClick={() => {
+                        setError();
                         setSelectedModule(-1);
 
                         let mods = modulos;
@@ -291,6 +354,7 @@ const NewCourse = () => {
                   <div className={styles.formHeaderSection}>
                     <button type="button" className={styles.btnText}
                       onClick={() => {
+                        setActionContent()
                         setOpenContent(true);
                       }}>
                       Adicionar conteúdo
@@ -316,7 +380,7 @@ const NewCourse = () => {
                           setActionContent(cq);
                           setOpenContent(true);
                       }}>
-                        Modulo: 
+                        Modulo:&nbsp;
                         {cq.titulo}
                         <div>
                           {cq.index}
@@ -331,7 +395,7 @@ const NewCourse = () => {
                           setActionQuizz(cq);
                           setOpenQuizz(true);
                       }}>
-                        Quizz: 
+                        Quizz:&nbsp;
                         {cq.titulo}
                         <div>
                           {cq.index}
@@ -368,6 +432,7 @@ const NewCourse = () => {
             ])
 
             setNewModule(false);
+            setError();
           }}
           cancelar={() => setNewModule(false)}
         />
@@ -385,7 +450,9 @@ const NewCourse = () => {
             conQuizz[selectedModule].push(con);
             setListConQuizz(conQuizz);
 
+            setActionContent();
             setOpenContent(false);
+            setError();
           }}
           editContent={(con) => {
             let mod = modulos;
@@ -396,7 +463,9 @@ const NewCourse = () => {
             conQuizz[selectedModule][con.index] = con;
             setListConQuizz(conQuizz);
 
+            setActionContent();
             setOpenContent(false);
+            setError();
           }}
           cont={actionContent}
           cancelar={() => {
@@ -418,7 +487,9 @@ const NewCourse = () => {
             conQuizz[selectedModule].push(qui);
             setListConQuizz(conQuizz);
 
+            setActionQuizz();
             setOpenQuizz(false);
+            setError();
           }}
           editQuizz={(qui) => {
             let mod = modulos;
@@ -429,7 +500,9 @@ const NewCourse = () => {
             conQuizz[selectedModule][qui.index] = qui;
             setListConQuizz(conQuizz);
 
+            setActionQuizz();
             setOpenQuizz(false);
+            setError();
           }}
           qui={actionQuizz}
           cancelar={() => {
@@ -439,6 +512,9 @@ const NewCourse = () => {
         />
       )}
 
+      {/* <div className={styles.log} onClick={() => console.log(modulos)}>
+        logger 
+      </div> */}
       
     </div>
   );

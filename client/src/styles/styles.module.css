@@ -46,6 +46,11 @@
   filter: brightness(1.1);
 }
 
+.btn:disabled {
+  cursor: not-allowed;
+  filter: grayscale(1);
+}
+
 .btnDanger {
   composes: btn;
   color: rgb(255, 255, 255);
@@ -82,7 +87,8 @@
 }
 
 .container {
-  margin: 28px 56px;
+  /* width: 80vw; */
+  margin: 28px 96px;
   height: 80vh;
   padding: 20px 40px;
   border: 1px solid var(--border-color);
@@ -90,11 +96,11 @@
   background-color: #fff;
 
   overflow-x: hidden;
-
   overflow-y: auto;
 }
 
 .landingContainer {
+  max-width: 80vw;
   margin: 48px 96px;
   padding: 32px 64px;
   min-height: 70vh;
@@ -117,7 +123,7 @@
 }
 
 .landingColumn {
-  width: 45%;
+  max-width: 45%;
 }
 
 .containerHeader {
@@ -291,7 +297,8 @@
 
 .moduleContainer {
   display: grid;
-  grid-template-columns: 25% 1fr;
+  grid-template-columns: 25% 75%;
+  gap: 32px;
 }
 
 .moduleList {
@@ -300,12 +307,11 @@
   align-items: center;
   padding: 0 8px 0 8px;
   gap: 8px;
-  margin-right: 8px;
 }
 
 .module {
   width: 100%;
-  padding: 4px;
+  padding: 8px;
   border-radius: 8px;
   border: 1px solid transparent;
   cursor: pointer;
@@ -313,6 +319,7 @@
 
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 4px;
 }
 
@@ -334,6 +341,29 @@
 .moduleContent {
   display: flex;
   flex-direction: column;
+  gap: 16px;
+  max-width: 95%;
+}
+
+.moduleHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.question {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.question .alternative {
+  display: grid;
+  width: 100%;
+  min-height: 20px;
+  align-items: center;
+  grid-template-columns: 25px 1fr 80px;
   gap: 8px;
 }
 
@@ -359,16 +389,32 @@
   border-radius: 50%;
   text-align: center;
   line-height: 35px;
-  background-color: var(--background-primary);
-}
-
-.alternative span svg {
-  opacity: 0;
+  background-color: var(--bg-light-hover);
   transition: all .3s ease;
 }
 
 .alternative input[type="radio"]:checked + span svg {
   opacity: 1;
+}
+
+.alternative input[type="radio"]:checked + span {
+  background-color: var(--background-primary);
+}
+
+.statusIcon {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  border-radius: 50%;
+  background-color: #d6d6d6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all .3s ease;
+}
+
+.statusIcon.complete {
+  background-color: var(--background-primary);
 }
 
 .courseHeader {
@@ -433,6 +479,18 @@
 }
 
 
+.selecione {
+  text-align: center;
+}
+
+.editable * {
+  border: none;
+  outline: transparent;
+}
+
+.editable > * :last-child {
+  padding-bottom: 64px;
+}
 
 .log {
   position: absolute;

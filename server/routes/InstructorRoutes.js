@@ -58,14 +58,14 @@ router.post("/newCourse", isAuthenticated, (req, res) => {
   
   if(req.body.categorias.length < 1) {
     res.status(400).json("O curso precisa ter pelo menos uma categoria!");
+    return res.end();
   }
 
   if(req.body.modulos.length < 1) {
     res.status(400).json("O curso precisa ter pelo menos um módulo!")
+    return res.end();
   }
 
-
-  
 
   
   const q = "INSERT INTO cur_curso (`cur_instrutorId`, `cur_titulo`, `cur_descricao`, `cur_dificuldade`, `cur_qtdExperiencia`, `cur_qtdInscritos`, `cur_status`) VALUES (?)";
@@ -73,6 +73,7 @@ router.post("/newCourse", isAuthenticated, (req, res) => {
   db.query(q, [course], (err, result) => {
     if(err) {
       res.status(400).json(err);
+      return res.end();
     }
 
 
@@ -86,9 +87,8 @@ router.post("/newCourse", isAuthenticated, (req, res) => {
     db.query(q2, [categorias], (err2, result2) => {
       if(err2) {
         res.status(400).json(err2);
+        return res.end();
       }
-
-      
     })
 
     
@@ -100,7 +100,7 @@ router.post("/newCourse", isAuthenticated, (req, res) => {
 
       db.query(q3, [modulo], (err3, result3) => {
         if(err3) {
-          res.status(400).json(err3);
+          res.status(400).json(err3).end();
         }
   
         const modId = result3.insertId;
@@ -111,20 +111,20 @@ router.post("/newCourse", isAuthenticated, (req, res) => {
 
         db.query(q4, [conteudos], (err4, result4) => {
           if(err4) {
-            res.status(400).json(err4);
+            res.status(400).json(err4).end();
           }
         })
 
         
         mod.quizzes.forEach(qui => {
           
-          const quizz = [qui.titulo, qui.index, modId];
+          const quizz = [qui?.titulo, qui?.index, modId];
   
           const q5 = "INSERT INTO qui_quizz (`qui_titulo`, `qui_index`, `qui_moduloId`) VALUES (?)";
           
           db.query(q5, [quizz], (err5, result5) => {
             if(err5) {
-              res.status(400).json(err5);
+              res.status(400).json(err5).end();
             }
 
             const quizzId = result5.insertId;
@@ -138,23 +138,24 @@ router.post("/newCourse", isAuthenticated, (req, res) => {
 
               db.query(q6, [questao], (err6, result6) => {
                 if(err6) {
-                  res.status(400).json(err6);
+                  // console.log(err6)
+                  res.status(400).json(err6).end();
+                } else {
+                  
+                  const questaoId = result6.insertId;
+  
+                  const alternativas = que.alternativas.map(a => [a.alternativa, a.correta, 0, questaoId]);
+  
+                  const q7 = "INSERT INTO alt_alternativa (`alt_alternativa`, `alt_correta`, `alt_index`, alt_questaoId) VALUES ?";
+  
+                  db.query(q7, [alternativas], (err7) => {
+                    if(err7) {
+                      res.status(400).json(err7).end();
+                    }
+  
+                    })
                 }
 
-                const questaoId = result6.insertId;
-
-                const alternativas = que.alternativas.map(a => [a.alternativa, a.correta, 0, questaoId]);
-
-                const q7 = "INSERT INTO alt_alternativa (`alt_alternativa`, `alt_correta`, `alt_index`, alt_questaoId) VALUES ?";
-
-                db.query(q7, [alternativas], (err7) => {
-                  if(err7) {
-                    res.status(400).json(err7);
-                  }
-
-                  // res.json('Curso cadastrado com sucesso!');
-                  
-                })
               })
             })
           })
@@ -162,7 +163,7 @@ router.post("/newCourse", isAuthenticated, (req, res) => {
       })
     })
   })
-  res.end();
+  return res.end();
 })
 
 router.get("/categories", isAuthenticated, (req, res) => {

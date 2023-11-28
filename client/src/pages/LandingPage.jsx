@@ -4,6 +4,7 @@ import LoginForm from '../components/LoginForm'
 import Navbar from '../components/Navbar';
 import styles from '../styles/styles.module.css';
 import LandingIlustration from '../assets/LandingIlustration';
+import LandingIlustration2 from '../assets/LandingIlustration2';
 
 const LandingPage = () => {
 

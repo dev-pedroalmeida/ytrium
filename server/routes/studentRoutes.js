@@ -61,15 +61,17 @@ router.post("/subscribe", isAuthenticated, (req, res) => {
                     })
                   })
         
-                  const q4 = "INSERT INTO alq_aluno_quizz (`alq_alunoId`, `alq_quizzId`, `alq_completo`) VALUES (?)";
-        
-                  curso.modulos[index].quizzes.forEach(qui => {
-                    db.query(q4, [[id, qui.id, false]], (err4, result4) => {
-                      if(err4) {
-                        res.status(400).json(err4);
-                      }
+                  if(curso.modulos[index].quizzes.length > 0) {
+                    const q4 = "INSERT INTO alq_aluno_quizz (`alq_alunoId`, `alq_quizzId`, `alq_completo`) VALUES (?)";
+  
+                    curso.modulos[index].quizzes.forEach(qui => {
+                      db.query(q4, [[id, qui.id, false]], (err4, result4) => {
+                        if(err4) {
+                          res.status(400).json(err4);
+                        }
+                      })
                     })
-                  })
+                  }
                   res.end();
                 }
               })
@@ -86,33 +88,31 @@ router.post("/subscribe", isAuthenticated, (req, res) => {
 router.get("/subscriptions", isAuthenticated, (req, res) => {
   const {id} = jwt.verify(req.cookies.token, 'jkey');
 
-  const q = `select c.cur_id, c.cur_titulo, c.cur_status, c.cur_qtdInscritos, c.cur_dificuldade, c.cur_qtdExperiencia, u.usu_nome, al.alc_status, modulos.modulos
+  const q = `select c.cur_id, c.cur_titulo, c.cur_status, c.cur_qtdInscritos, c.cur_dificuldade, c.cur_qtdExperiencia, u.usu_nome, al.alc_status, modulos.quantidade, modulos.completos
               from cur_curso c
               inner join (
-                select distinct mm.mod_cursoId, json_arrayagg(json_object('completo', alm.alm_completo)) as modulos
+                select distinct mm.mod_cursoId, count(*) as quantidade, sum(if(alm.alm_completo = 1, 1, 0)) as completos
                   from mod_modulo mm
                   inner join cur_curso c on c.cur_id = mm.mod_cursoId
                   left join alm_aluno_modulo alm on alm.alm_moduloId = mm.mod_id and alm.alm_alunoId = ${id}
                   group by mm.mod_cursoId
               ) as modulos on modulos.mod_cursoId = c.cur_id
               inner join usu_usuario u on u.usu_id = c.cur_instrutorId
-              left join alc_aluno_curso al on al.alc_cursoId = c.cur_id and al.alc_alunoId = ${id}
-              where c.cur_status = 'publico' and c.cur_id = ? limit 1;`
+              right join alc_aluno_curso al on al.alc_cursoId = c.cur_id and al.alc_alunoId = ${id}
+              where c.cur_status = 'publico';`;
 
-  db.query(q, [req.params.courseId], (err, result) => {
+  db.query(q, (err, result) => {
     if(err) {
       res.status(400).json(err);
     }
 
     if(result.length < 1) {
-      return res.status(404).json("Curso não encontrado!");
+      return res.status(404).json("Nenhum curso encontrado!");
     }
 
-    let curso = result[0];
-    curso.modulos = JSON.parse(curso.modulos);
-    curso.modulos = curso.modulos.sort((a,b) => a.index - b.index);
+    let cursos = result;
 
-    return res.json(curso);
+    return res.json(cursos);
   })
   
 })
@@ -144,12 +144,12 @@ router.get("/subscribed/:courseId", isAuthenticated, (req, res) => {
           left join aco_aluno_conteudo aco on aco.aco_conteudoId = cn.con_id and aco.aco_alunoId = ${id}
       group by m.mod_id
     ) as modulo_conteudos on modulo_conteudos.mod_id = mm.mod_id
-      inner join (
-      select distinct m.mod_id, json_arrayagg(json_object('id', qu.qui_id, 'titulo', qu.qui_titulo, 'completo', alq.alq_completo, 'index', qu.qui_index, 'questoes', quizz_questoes.questoes)) as quizzes
+      left join (
+      select distinct m.mod_id, json_arrayagg(json_object('id', qu.qui_id, 'titulo', qu.qui_titulo, 'completo', alq.alq_completo, 'porcentagemAcertos', alq_porcentagemAcertos, 'index', qu.qui_index, 'questoes', quizz_questoes.questoes)) as quizzes
       from mod_modulo m
-      inner join qui_quizz qu on qu.qui_moduloId = m.mod_id
-          left join alq_aluno_quizz alq on alq.alq_quizzId = qu.qui_id and alq.alq_alunoId = ${id}
-          inner join (
+      left join qui_quizz qu on qu.qui_moduloId = m.mod_id
+      left join alq_aluno_quizz alq on alq.alq_quizzId = qu.qui_id and alq.alq_alunoId = ${id}
+      inner join (
         select distinct qu.qui_id, json_arrayagg(json_object('id', qe.que_id, 'pergunta', qe.que_pergunta, 'index', qe.que_index, 'alternativas', questao_alternativas.alternativas)) as questoes
         from qui_quizz qu
         inner join que_questao qe on qe.que_quizzId = qu.qui_id
@@ -184,6 +184,37 @@ router.get("/subscribed/:courseId", isAuthenticated, (req, res) => {
     curso.modulos = curso.modulos.sort((a,b) => a.index - b.index);
 
     return res.json(curso);
+  })
+
+})
+
+
+router.put("/completeContent", isAuthenticated, (req, res) => {
+  const { id } = jwt.verify(req.cookies.token, 'jkey');
+
+  const q = `UPDATE aco_aluno_conteudo SET aco_completo = ${true} WHERE aco_alunoId = ${id} and aco_conteudoId = ${req.body.conteudoId}`;
+
+  db.query(q, (err, result) => {
+    if(err) {
+      return res.status(400).json(err);
+    } else {
+      return res.json(result);
+    }
+  })
+
+})
+
+router.put("/completeQuizz", isAuthenticated, (req, res) => {
+  const { id } = jwt.verify(req.cookies.token, 'jkey');
+
+  const q = `UPDATE alq_aluno_quizz SET alq_completo = ${true} WHERE alq_alunoId = ${id} and alq_quizzId = ${req.body.quizzId}`;
+
+  db.query(q, (err, result) => {
+    if(err) {
+      return res.status(400).json(err);
+    } else {
+      return res.json(result);
+    }
   })
 
 })

@@ -69,17 +69,38 @@ const QuizzModal = ({saveQuizz, editQuizz, cancelar,
     e.preventDefault();
     setError();
 
-    for(let at in quizz) {
-      if(at == '') {
-        return setError("Preencha todos os campos!");
-      }
+    if(quizz.titulo == '') {
+      setError("O quizz precisa de um título!");
+      return;
     }
 
-    if(quizz.hasOwnProperty('index')) {
-      editQuizz(quizz);
-    } else {
-      saveQuizz(quizz);
-    }
+    quizz.questoes.forEach((que) => {
+      if(que.pergunta == '') {
+        setError("Todas as questões precisam de uma pergunta!");
+        return;
+      }
+
+      que.alternativas.forEach((alt) => {
+        if(alt.alternativa == '') {
+          setError("Preencha todas as alternativas!");
+          return;
+        }
+      })
+    })
+
+    setTimeout(() => {
+      if(error == '' ||
+        error == undefined ||
+        error == false) {
+          
+          if(quizz.hasOwnProperty('index')) {
+            editQuizz(quizz);
+          } else {
+            saveQuizz(quizz);
+          }
+      }
+
+    }, 1000)
   }
 
   return (
@@ -168,7 +189,7 @@ const QuizzModal = ({saveQuizz, editQuizz, cancelar,
 
                   <label>
                     Pergunta
-                    <input type="text" name='pergunta' value={question.pergunta} onChange={e => handlePergunta(e.target.value)} />
+                    <textarea rows="2" name='pergunta' value={question.pergunta} onChange={e => handlePergunta(e.target.value)}></textarea>
                   </label>
 
                   {question.alternativas.map((alt, index) => {
@@ -189,7 +210,8 @@ const QuizzModal = ({saveQuizz, editQuizz, cancelar,
                     )
                   })}
 
-                  <button type='button' className={styles.btn} style={{alignSelf: 'center'}}  
+                  <button type='button' className={styles.btn} style={{alignSelf: 'center'}} 
+                    disabled={question.alternativas.length == 4}
                     onClick={handleNewAlternativa}>
                     Adicionar alternativa
                     <PlusIcon />
@@ -204,7 +226,9 @@ const QuizzModal = ({saveQuizz, editQuizz, cancelar,
           
         </form>
       </div>
-      
+      {/* <div className={styles.log} onClick={() => console.log(quizz)}>
+        logger 
+      </div> */}
     </div>
   )
 }

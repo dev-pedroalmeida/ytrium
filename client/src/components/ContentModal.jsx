@@ -1,11 +1,28 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import styles from '../styles/styles.module.css';
+import { withHistory } from 'slate-history';
+import { withReact } from 'slate-react';
+import { createEditor } from 'slate';
+import DescEditor from "./DescEditor";
 
 const ContentModal = ({saveContent, editContent, cancelar, cont = {titulo: '', videoLink: '', material: ''}}) => {
 
   const [content, setContent] = useState(cont)
 
   const [error, setError] = useState();
+
+  const editor = useMemo(() => withHistory(withReact(createEditor())), [])
+  const [material, setMaterial] = useState(
+    cont.material == '' ?
+    [
+      {
+        type: "paragraph",
+        children: [{ text: "Insira o conteúdo do material!" }]
+      }
+    ]
+    :
+    JSON.parse(cont.material)
+  );
 
   const handleInput = (e) => {
     setContent((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -15,16 +32,31 @@ const ContentModal = ({saveContent, editContent, cancelar, cont = {titulo: '', v
     e.preventDefault();
     setError();
 
-    for(let at in content) {
-      if(at == '') {
-        return setError("Preencha todos os campos!");
-      }
+    if(content.titulo == '') {
+      setError('O conteúdo precisa de um título!');
+      return;
     }
 
-    if(cont.hasOwnProperty('index')) {
-      editContent(content);
-    } else {
-      saveContent(content);
+    if(content.videoLink == '' && material == '') {
+      setError('O conteúdo precisa de um vídeo ou um material escrito!');
+      return;
+    }
+
+    console.log(error)
+    if(error == false ||
+      error == undefined ||
+      error == '') {
+      if(cont.hasOwnProperty('index')) {
+        editContent({
+          ...content,
+          material: JSON.stringify(material),
+        });
+      } else {
+        saveContent({
+          ...content,
+          material: JSON.stringify(material),
+        });
+      }
     }
     
   }
@@ -59,12 +91,20 @@ const ContentModal = ({saveContent, editContent, cancelar, cont = {titulo: '', v
             <input type="text" name='videoLink' defaultValue={cont.videoLink} onChange={handleInput} />
           </label>
           <label>
-            Material
-            <textarea name='material' cols="30" rows="8" defaultValue={cont.material} onChange={handleInput} />
+            Material escrito
+            {/* <textarea name='material' cols="30" rows="8" defaultValue={cont.material} onChange={handleInput} /> */}
+            <DescEditor 
+                initialValue={material}
+                placeholder={"Insira uma descrição!"}
+                onChange={(newMaterial) => setMaterial(newMaterial)}
+                editor={editor} 
+              />
           </label>
           
         </form>
       </div>
+
+      
     </div>
   )
 }
