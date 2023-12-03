@@ -99,6 +99,33 @@
   overflow-y: auto;
 }
 
+.modal {
+  margin: 28px 96px;
+  padding: 20px 40px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background-color: #fff;
+
+  overflow-x: hidden;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.modalHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.modalRow {
+  margin-top: 16px;
+  display: flex;
+  gap: 8px;
+  justify-content: end;
+}
+
 .landingContainer {
   max-width: 80vw;
   margin: 48px 96px;
@@ -236,6 +263,20 @@
 .error {
   background-color: rgba(255, 50, 50, 0.082);
   color: rgb(255, 2, 2);
+  border-radius: 8px;
+  padding: 8px;
+}
+
+.info {
+  background-color: rgba(255, 139, 50, 0.082);
+  color: rgb(255, 95, 2);
+  border-radius: 8px;
+  padding: 8px;
+}
+
+.success {
+  background-color: rgba(124, 255, 30, 0.082);
+  color: rgb(0, 180, 21);
   border-radius: 8px;
   padding: 8px;
 }
@@ -415,6 +456,17 @@
 
 .statusIcon.complete {
   background-color: var(--background-primary);
+}
+
+.quizzComplete {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  background-color: rgba(255, 139, 50, 0.082);
+  color: rgb(255, 163, 50);
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 8px;
 }
 
 .courseHeader {

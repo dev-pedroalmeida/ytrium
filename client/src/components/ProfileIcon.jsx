@@ -42,7 +42,7 @@ const ProfileIcon = () => {
     
           <div className={pStyles.dropItem}>Perfil</div>
     
-          <div className={pStyles.dropItem} onClick={() => handleLogout()}>Deslogar</div>
+          <div className={pStyles.dropItem} onClick={() => handleLogout()}>Sair</div>
         </div>
       }
     </div>

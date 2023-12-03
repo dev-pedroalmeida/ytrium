@@ -1,10 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import styles from "../styles/styles.module.css";
 import BackIcon from "../assets/BackIcon";
+import NextIcon from "../assets/NextIcon";
 import DescEditor from "../components/DescEditor";
+import QuizzSubmit from "../components/QuizzSubmit";
 
 const CourseSubscribed = () => {
   const { user } = useContext(AuthContext);
@@ -18,21 +20,21 @@ const CourseSubscribed = () => {
   const [selectedModule, setSelectedModule] = useState(-1);
   const [selectedConQuizz, setSelectedConQuizz] = useState(-1);
   const [current, setCurrent] = useState(0);
-
-  const [answer, setAnswer] = useState([]);
+  const [courseCompleted, setCourseCompleted] = useState(false);
 
   const [loading, setLoading] = useState(true);
 
+  const navigate = useNavigate();
+
   function handleSelectModule(selected) {
     setSelectedConQuizz(-1);
-    setAnswer([]);
     setSelectedModule(selected);
 
     function populateLista() {
-      if(modulos[selected].quizzes) {
+      if (modulos[selected].quizzes) {
         return [...modulos[selected].conteudos, ...modulos[selected].quizzes];
       } else {
-        return [...modulos[selected].conteudos]
+        return [...modulos[selected].conteudos];
       }
     }
 
@@ -47,29 +49,22 @@ const CourseSubscribed = () => {
 
   function handleSelectConQuizz(select, completo) {
     setSelectedConQuizz(select);
-    setAnswer([])
-    if(select == -1) {
+    if (select == -1) {
       setCurrent(0);
     } else {
       setCurrent(completo);
     }
   }
 
-  function handleSelectAnswer(ind, selected) {
-    console.log(ind)
-    console.log(selected)
-    let ans = answer
-    ans[ind] = {
-      selected: selected,
-    }
-    setAnswer(ans);
-  }
-
   function handleCompleteContent(contentId) {
     axios
-      .put(`http://localhost:3000/student/completeContent`, {conteudoId: contentId}, {
-        withCredentials: true,
-      })
+      .put(
+        `http://localhost:3000/student/completeContent`,
+        { conteudoId: contentId },
+        {
+          withCredentials: true,
+        }
+      )
       .then((res) => {
         console.log(res);
 
@@ -78,47 +73,122 @@ const CourseSubscribed = () => {
         setListConQuizz(newListConQuizz);
 
         let newCourse = course;
-        newCourse.modulos[selectedModule].conteudos.forEach(con => {
-          if(newListConQuizz[selectedConQuizz].id == con.id) {
+        newCourse.modulos[selectedModule].conteudos.forEach((con) => {
+          if (newListConQuizz[selectedConQuizz].id == con.id) {
             con.completo = 1;
           }
-        })
+        });
         setCourse(newCourse);
+
+        handleCompleteModule(newCourse.modulos[selectedModule].id);
 
         setCurrent(1);
 
         // handleSelectConQuizz(-1);
-      })
+      });
   }
 
-  function handleCompleteQuizz(quizzId) {
-    // axios
-    //   .put(`http://localhost:3000/student/completeQuizz`, {quizzId: quizzId}, {
-    //     withCredentials: true,
-    //   })
-    //   .then((res) => {
-    //     console.log(res);
+  function handleSaveQuizz(quizzId, porAcertos) {
+    axios
+      .put(
+        `http://localhost:3000/student/completeQuizz`,
+        { quizzId: quizzId, porAcertos: porAcertos },
+        {
+          withCredentials: true,
+        }
+      )
+      .then((res) => {
+        console.log(res);
 
-    //     let newListConQuizz = listConQuizz;
-    //     newListConQuizz[selectedConQuizz].completo = 1;
-    //     setListConQuizz(newListConQuizz);
+        let newListConQuizz = listConQuizz;
+        newListConQuizz[selectedConQuizz].completo = 1;
+        setListConQuizz(newListConQuizz);
 
-    //     let newCourse = course;
-    //     newCourse.modulos[selectedModule].quizzes.forEach(qui => {
-    //       if(newListConQuizz[selectedConQuizz].id == qui.id) {
-    //         qui.completo = 1;
-    //       }
-    //     })
-    //     setCourse(newCourse);
+        let newCourse = course;
+        newCourse.modulos[selectedModule].quizzes.forEach((qui) => {
+          if (newListConQuizz[selectedConQuizz].id == qui.id) {
+            qui.completo = 1;
+            qui.porcentagemAcertos = porAcertos;
+          }
+        });
+        setCourse(newCourse);
 
-    //     setCurrent(1);
+        handleCompleteModule(newCourse.modulos[selectedModule].id);
 
-    //     // handleSelectConQuizz(-1);
-    //   })
+        setCurrent(1);
 
-
+        // handleSelectConQuizz(-1);
+      });
   }
 
+  function handleCompleteModule(moduloId) {
+    let notComplete = false;
+    let newCourse = course;
+
+    newCourse.modulos[selectedModule].quizzes.forEach((qui) => {
+      if (qui.completo == 0) {
+        notComplete = true;
+      }
+    });
+
+    newCourse.modulos[selectedModule].conteudos.forEach((con) => {
+      if (con.completo == 0) {
+        notComplete = true;
+      }
+    });
+
+    if (notComplete) return;
+
+    axios
+      .put(
+        `http://localhost:3000/student/completeModule`,
+        { moduloId: moduloId },
+        {
+          withCredentials: true,
+        }
+      )
+      .then((res) => {
+        let newCourse = course;
+        newCourse.modulos.forEach((mod) => {
+          if (mod.id == moduloId) {
+            mod.completo = 1;
+          }
+        });
+        setCourse(newCourse);
+
+        handleCompleteCourse(newCourse.cur_id);
+      });
+  }
+
+  function handleCompleteCourse(cursoId) {
+    let notComplete = false;
+    let newCourse = course;
+
+    newCourse.modulos.forEach((mod) => {
+      if (mod.completo == 0) {
+        notComplete = true;
+      }
+    });
+
+    if (notComplete) return;
+
+    axios
+      .put(
+        `http://localhost:3000/student/completeCourse`,
+        { cursoId: cursoId },
+        {
+          withCredentials: true,
+        }
+      )
+      .then((res) => {
+        let newCourse = course;
+        newCourse.completo = 1;
+        setCourse(newCourse);
+        setTimeout(() => {
+          setCourseCompleted(true);
+        }, 1000);
+      });
+  }
 
   useEffect(() => {
     axios
@@ -131,8 +201,8 @@ const CourseSubscribed = () => {
         setModulos(res.data.modulos);
         setTimeout(() => {
           setLoading(false);
-        }, 1000)
-      })
+        }, 1000);
+      });
   }, [courseId]);
 
   return (
@@ -143,11 +213,16 @@ const CourseSubscribed = () => {
         <>
           <div className={styles.containerHeader}>
             <h1>{course?.cur_titulo}</h1>
+
+            <div className={styles.quizzComplete} style={{cursor: 'pointer'}} onClick={() => navigate('profile/completions')}>
+              Completo
+              <NextIcon />
+            </div>
           </div>
 
           <div className={styles.moduleContainer}>
             <div className={styles.moduleList}>
-              {modulos.length > 0 && (
+              {modulos.length > 0 &&
                 modulos?.map((modulo) => {
                   return (
                     <div
@@ -191,8 +266,7 @@ const CourseSubscribed = () => {
                       </div>
                     </div>
                   );
-                })
-              )}
+                })}
             </div>
 
             <div className={styles.moduleContent}>
@@ -289,33 +363,48 @@ const CourseSubscribed = () => {
 
                         <h2>{listConQuizz[selectedConQuizz].titulo}</h2>
 
-                        <div
-                          className={
-                            current == 1
-                              ? styles.statusIcon + " " + styles.complete
-                              : styles.statusIcon
-                          }
-                        >
-                          <svg
-                            width="14"
-                            height="14"
-                            viewBox="0 0 18 14"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
+                        <div className={current == 1 && styles.quizzComplete}>
+                          {listConQuizz[selectedConQuizz].hasOwnProperty(
+                            "porcentagemAcertos"
+                          ) &&
+                            current == 1 && (
+                              <div>
+                                {
+                                  listConQuizz[selectedConQuizz]
+                                    .porcentagemAcertos
+                                }%
+                              </div>
+                            )}
+
+                          <div
+                            className={
+                              current == 1
+                                ? styles.statusIcon + " " + styles.complete
+                                : styles.statusIcon
+                            }
                           >
-                            <path
-                              d="M3.0293 6.96413L6.98116 10.916L14.8988 3.01233"
-                              stroke="white"
-                              strokeWidth="5.25538"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            />
-                          </svg>
+                            <svg
+                              width="14"
+                              height="14"
+                              viewBox="0 0 18 14"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M3.0293 6.96413L6.98116 10.916L14.8988 3.01233"
+                                stroke="white"
+                                strokeWidth="5.25538"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              />
+                            </svg>
+                          </div>
                         </div>
                       </div>
 
-                      {listConQuizz[selectedConQuizz].hasOwnProperty("material") 
-                      ? (
+                      {listConQuizz[selectedConQuizz].hasOwnProperty(
+                        "material"
+                      ) ? (
                         <>
                           <div>
                             {listConQuizz[selectedConQuizz].videoLink && (
@@ -348,69 +437,30 @@ const CourseSubscribed = () => {
                             )}
                           </div>
 
-                          <button className={styles.btn} style={{alignSelf: 'center'}}
-                            onClick={() => handleCompleteContent(listConQuizz[selectedConQuizz].id)}
-                            disabled={current == 1}>
+                          <button
+                            className={styles.btn}
+                            style={{ alignSelf: "center" }}
+                            onClick={() =>
+                              handleCompleteContent(
+                                listConQuizz[selectedConQuizz].id
+                              )
+                            }
+                            disabled={current == 1}
+                          >
                             Completar
                           </button>
                         </>
                       ) : (
                         <>
-                          <div>
-                            {listConQuizz[selectedConQuizz].questoes.map((que, ind) => {
-                              return (
-                                <div key={que.id} className={styles.question}>
-                                  <h3>{que.pergunta}</h3>
-                                  {que.alternativas.map(alt => {
-                                    return (
-                                      <div key={alt.id} className={styles.alternative}>
-                                        
-                                        <div className={
-                                              answer[ind]?.selected == alt.id
-                                                ? styles.statusIcon + " " + styles.complete
-                                                : styles.statusIcon 
-                                            }
-                                        >
-                                          <svg
-                                            width="14"
-                                            height="14"
-                                            viewBox="0 0 18 14"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                          >
-                                            <path
-                                              d="M3.0293 6.96413L6.98116 10.916L14.8988 3.01233"
-                                              stroke="white"
-                                              strokeWidth="5.25538"
-                                              strokeLinecap="round"
-                                              strokeLinejoin="round"
-                                            />
-                                          </svg>
-                                        </div>
-
-                                        <div>
-                                          {alt.alternativa}
-                                        </div>
-                                      </div>
-                                    )
-                                  })}
-                                </div>
-
-                              )
-                            })}
-                          </div>
-
-                          <button className={styles.btn} style={{alignSelf: 'center'}}
-                            onClick={() => handleCompleteQuizz(listConQuizz[selectedConQuizz].id)}
-                            disabled={current == 1}>
-                            Completar
-                          </button>
+                          <QuizzSubmit
+                            quizz={listConQuizz[selectedConQuizz]}
+                            current={current}
+                            handleSaveQuizz={(quizzId, porAcertos) =>
+                              handleSaveQuizz(quizzId, porAcertos)
+                            }
+                          />
                         </>
                       )}
-
-
-                      
-
                     </>
                   )}
                 </>
@@ -420,6 +470,46 @@ const CourseSubscribed = () => {
             </div>
           </div>
         </>
+      )}
+      {/* <div className={styles.log} onClick={() => console.log(answer)}>
+        logger 
+      </div> */}
+
+      {courseCompleted && (
+        <div className={styles.overlay}>
+          <div className={styles.modal}>
+            <div className={styles.modalHeader}>
+              <div className={styles.statusIcon + " " + styles.complete}>
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 18 14"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M3.0293 6.96413L6.98116 10.916L14.8988 3.01233"
+                    stroke="white"
+                    strokeWidth="5.25538"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </div>
+              <h1>Parabéns!</h1>
+            </div>
+            Você completo o curso {course.cur_titulo}
+            <div className={styles.modalRow}>
+              <button
+                className={styles.btnSecondary}
+                onClick={() => setCourseCompleted(false)}
+              >
+                Fechar
+              </button>
+              <button className={styles.btn}>Ver Certificado</button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

@@ -207,7 +207,37 @@ router.put("/completeContent", isAuthenticated, (req, res) => {
 router.put("/completeQuizz", isAuthenticated, (req, res) => {
   const { id } = jwt.verify(req.cookies.token, 'jkey');
 
-  const q = `UPDATE alq_aluno_quizz SET alq_completo = ${true} WHERE alq_alunoId = ${id} and alq_quizzId = ${req.body.quizzId}`;
+  const q = `UPDATE alq_aluno_quizz SET alq_completo = ${true}, alq_porcentagemAcertos = ${req.body.porAcertos} WHERE alq_alunoId = ${id} and alq_quizzId = ${req.body.quizzId}`;
+
+  db.query(q, (err, result) => {
+    if(err) {
+      return res.status(400).json(err);
+    } else {
+      return res.json(result);
+    }
+  })
+
+})
+
+router.put("/completeModule", isAuthenticated, (req, res) => {
+  const { id } = jwt.verify(req.cookies.token, 'jkey');
+
+  const q = `UPDATE alm_aluno_modulo SET alm_completo = ${true} WHERE alm_alunoId = ${id} and alm_moduloId = ${req.body.moduloId}`;
+
+  db.query(q, (err, result) => {
+    if(err) {
+      return res.status(400).json(err);
+    } else {
+      return res.json(result);
+    }
+  })
+
+})
+
+router.put("/completeCourse", isAuthenticated, (req, res) => {
+  const { id } = jwt.verify(req.cookies.token, 'jkey');
+
+  const q = `UPDATE alc_aluno_curso SET alc_status = ${true} WHERE alc_alunoId = ${id} and alc_cursoId = ${req.body.cursoId}`;
 
   db.query(q, (err, result) => {
     if(err) {
