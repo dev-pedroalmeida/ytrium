@@ -61,7 +61,7 @@ router.post("/subscribe", isAuthenticated, (req, res) => {
                     })
                   })
         
-                  if(curso.modulos[index].quizzes.length > 0) {
+                  if(curso.modulos[index].quizzes & curso.modulos[index].quizzes.length > 0) {
                     const q4 = "INSERT INTO alq_aluno_quizz (`alq_alunoId`, `alq_quizzId`, `alq_completo`) VALUES (?)";
   
                     curso.modulos[index].quizzes.forEach(qui => {
@@ -247,6 +247,31 @@ router.put("/completeCourse", isAuthenticated, (req, res) => {
     }
   })
 
+})
+
+router.get("/completedCourses", isAuthenticated, (req, res) => {
+  const {id} = jwt.verify(req.cookies.token, 'jkey');
+
+  const q = `select c.cur_id, c.cur_titulo, c.cur_status, c.cur_dificuldade, c.cur_qtdExperiencia, u.usu_nome, al.alc_status
+              from cur_curso c
+              inner join usu_usuario u on u.usu_id = c.cur_instrutorId
+              right join alc_aluno_curso al on al.alc_cursoId = c.cur_id and al.alc_alunoId = ${id}
+              where c.cur_status = 'publico' and al.alc_status = 1;`;
+
+  db.query(q, (err, result) => {
+    if(err) {
+      res.status(400).json(err);
+    }
+
+    if(result.length < 1) {
+      return res.status(404).json("Nenhum curso encontrado!");
+    }
+
+    let cursos = result;
+
+    return res.json(cursos);
+  })
+  
 })
 
 module.exports = router;

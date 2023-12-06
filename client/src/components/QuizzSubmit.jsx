@@ -117,9 +117,9 @@ const QuizzSubmit = ({ quizz, current, handleSaveQuizz }) => {
           </button>
         </>
       )}
-      <div className={styles.log} onClick={() => console.log(selectAnswers)}>
+      {/* <div className={styles.log} onClick={() => console.log(selectAnswers)}>
         logger 
-      </div>
+      </div> */}
     </>
   );
 };

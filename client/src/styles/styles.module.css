@@ -302,7 +302,7 @@
 
 .courseCardContent {
   padding-bottom: 8px;
-  border-bottom: 1px solid var(--border-color);
+  /* border-bottom: 1px solid var(--border-color); */
   flex: 1;
 }
 
@@ -528,6 +528,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   margin-top: 32px;
+  gap: 16px;
 }
 
 
@@ -542,6 +543,11 @@
 
 .editable > * :last-child {
   padding-bottom: 64px;
+}
+
+.profileInfo {
+  display: flex;
+  gap: 8px;
 }
 
 .log {

@@ -22,6 +22,7 @@ import NewCourse from "./pages/instructor/NewCourse";
 import CoursePage from "./pages/CoursePage";
 import AdminCategories from "./pages/admin/AdminCategories";
 import CourseSubscribed from "./pages/CourseSubscribed.jsx";
+import StudentProfile from "./pages/student/StudentProfile.jsx";
 
 const router = createBrowserRouter([
   {
@@ -56,6 +57,10 @@ const router = createBrowserRouter([
           {
             path: "subscriptions",
             element: <SubscriptionsPage />
+          },
+          {
+            path: "profile",
+            element: <StudentProfile />
           }
         ]
       },

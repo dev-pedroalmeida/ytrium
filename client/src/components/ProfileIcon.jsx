@@ -11,6 +11,12 @@ const ProfileIcon = () => {
 
   const navigate = useNavigate();
 
+  function handleProfile() {
+    if(user.tipo == 'estudante') {
+      navigate('/student/profile');
+    }
+  }
+
   function handleLogout() {
     axios.get('http://localhost:3000/logout', {
       withCredentials: true,
@@ -40,7 +46,7 @@ const ProfileIcon = () => {
             </div>
           </div>
     
-          <div className={pStyles.dropItem}>Perfil</div>
+          <div className={pStyles.dropItem} onClick={() => handleProfile()}>Perfil</div>
     
           <div className={pStyles.dropItem} onClick={() => handleLogout()}>Sair</div>
         </div>

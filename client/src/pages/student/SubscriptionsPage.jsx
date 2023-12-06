@@ -11,7 +11,12 @@ const SubscriptionsPage = () => {
 
   const coursesList = courses?.map(course => {
     return (
-      <div className={styles.courseCard} key={course.cur_id}>
+      <div className={styles.courseCard} key={course.cur_id} style={{position: 'relative'}}>
+        {course?.alc_status == 1 &&
+          <div className={styles.quizzComplete} style={{cursor: 'pointer', position: 'absolute', top: '4px', right: '2px'}} onClick={() => navigate('/student/profile')}>
+            Completo
+          </div>
+        }
         <div className={styles.courseCardContent}>
           <Link to={`/course/subscribed/${course.cur_id}`}>
             <div className={styles.courseTitle}>{course.cur_titulo}</div>

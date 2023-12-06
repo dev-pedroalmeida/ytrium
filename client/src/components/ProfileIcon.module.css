@@ -43,7 +43,7 @@
     border-radius: 4px;
     transition: all .3s ease;
     padding: 8px;
-    cursor: default;
+    cursor: pointer;
 }
 
 .dropItem:hover {

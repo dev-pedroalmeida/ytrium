@@ -125,11 +125,13 @@ const CourseSubscribed = () => {
     let notComplete = false;
     let newCourse = course;
 
-    newCourse.modulos[selectedModule].quizzes.forEach((qui) => {
-      if (qui.completo == 0) {
-        notComplete = true;
-      }
-    });
+    if(newCourse.modulos[selectedModule].quizzes) {
+      newCourse.modulos[selectedModule].quizzes.forEach((qui) => {
+        if (qui.completo == 0) {
+          notComplete = true;
+        }
+      });
+    }
 
     newCourse.modulos[selectedModule].conteudos.forEach((con) => {
       if (con.completo == 0) {
@@ -214,10 +216,12 @@ const CourseSubscribed = () => {
           <div className={styles.containerHeader}>
             <h1>{course?.cur_titulo}</h1>
 
-            <div className={styles.quizzComplete} style={{cursor: 'pointer'}} onClick={() => navigate('profile/completions')}>
-              Completo
-              <NextIcon />
-            </div>
+            {course?.alc_status == 1 &&
+              <div className={styles.quizzComplete} style={{cursor: 'pointer'}} onClick={() => navigate('/student/profile')}>
+                Completo
+                <NextIcon />
+              </div>
+            }
           </div>
 
           <div className={styles.moduleContainer}>
@@ -247,6 +251,9 @@ const CourseSubscribed = () => {
                             ? styles.statusIcon
                             : styles.statusIcon + " " + styles.complete
                         }
+                        onClick={() => {
+                          handleCompleteModule(modulo.id)
+                        }}
                       >
                         <svg
                           width="14"
@@ -506,7 +513,7 @@ const CourseSubscribed = () => {
               >
                 Fechar
               </button>
-              <button className={styles.btn}>Ver Certificado</button>
+              <button className={styles.btn} onClick={() => navigate('/student/profile')}>Ver Certificado</button>
             </div>
           </div>
         </div>
