@@ -60,8 +60,8 @@ router.post("/subscribe", isAuthenticated, (req, res) => {
                       }
                     })
                   })
-        
-                  if(curso.modulos[index].quizzes & curso.modulos[index].quizzes.length > 0) {
+                  
+                  if(curso.modulos[index].quizzes && curso.modulos[index].quizzes.length > 0) {
                     const q4 = "INSERT INTO alq_aluno_quizz (`alq_alunoId`, `alq_quizzId`, `alq_completo`) VALUES (?)";
   
                     curso.modulos[index].quizzes.forEach(qui => {
