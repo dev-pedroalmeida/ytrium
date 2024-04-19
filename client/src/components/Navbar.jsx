@@ -4,6 +4,8 @@ import styles from "../styles/styles.module.css"
 import navStyles from "./Navbar.module.css";
 import { Link } from "react-router-dom";
 import ProfileIcon from "./ProfileIcon";
+import YtriumText from "../assets/YtriumText";
+import YtriumLogo from "../assets/YtriumLogo";
 
 const Navbar = ({ userType, login, signup, instructorSignup }) => {
 
@@ -91,10 +93,20 @@ const Navbar = ({ userType, login, signup, instructorSignup }) => {
   }, [userType])
 
   return (
+    <>
     <header>
-      <img src={ytrium} alt="ytrium logo" className={navStyles.logo} />
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: '1px'
+      }}>
+        <YtriumLogo />
+        <YtriumText />
+      </div>
+      {/* <img src={ytrium} alt="ytrium logo" className={navStyles.logo} /> */}
       {navContent}
     </header>
+    </>
   );
 };
 
