@@ -3,9 +3,14 @@ import { AuthContext } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import styles from "../styles/styles.module.css";
+import FormTitle from "./form/FormTitle";
+import FormLegend from "./form/FormLegend";
+import FormLabel from "./form/FormLabel";
+import FormInput from "./form/FormInput";
+import Button from "./Button";
+import Overlay from "./Overlay";
 
 const LoginForm = ({ closeForm }) => {
-  
   const { setUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -49,41 +54,53 @@ const LoginForm = ({ closeForm }) => {
   };
 
   return (
-    <div className={styles.overlay}>
-      <form id="loginform" className={styles.lsform} onSubmit={handleLogin}>
-        <div className={styles.formTitle}>
+    <Overlay onClick={closeForm}>
+      <form
+        id="loginform"
+        onSubmit={handleLogin}
+        onClick={(e) => e.stopPropagation()}
+        className="flex flex-col gap-4 p-8 pt-12 bg-white rounded-md shadow-lg w-[400px]"
+      >
+        <FormTitle>
           Login
-          <p className={styles.formLegend}>Insira seus dados!</p>
-        </div>
-        {error && <div className={styles.error}>{error}</div>}
-        <label>
+          <FormLegend>Insira seus dados!</FormLegend>
+        </FormTitle>
+        
+        {error && 
+        <div className="bg-red-100 text-red-500 px-2 py-1 rounded-lg">
+          {error}
+        </div>}
+        
+        <FormLabel>
           Email:
-          <input
+          <FormInput
             name="email"
             type="email"
             placeholder="email@exemplo.com"
             onChange={handleInput}
           />
-        </label>
+        </FormLabel>
 
-        <label>
+        <FormLabel>
           Senha:
-          <input
+          <FormInput
             name="senha"
             type="password"
             placeholder="******"
             onChange={handleInput}
           />
-        </label>
+        </FormLabel>
 
-        <button type="submit" className={styles.btn}>
-          Logar
-        </button>
-        <button className={styles.btnSecondary} onClick={() => closeForm()}>
-          Cancelar
-        </button>
+        <div className="flex items-center gap-1 justify-end">
+          <Button variant="secondary" onClick={() => closeForm()}>
+            Cancelar
+          </Button>
+          <Button type="submit">
+            Logar
+          </Button>
+        </div>
       </form>
-    </div>
+    </Overlay>
   );
 };
 

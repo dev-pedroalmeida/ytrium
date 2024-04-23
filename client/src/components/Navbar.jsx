@@ -1,111 +1,100 @@
 import React, { useEffect, useState } from "react";
-import ytrium from "../assets/ytrium.png";
-import styles from "../styles/styles.module.css"
-import navStyles from "./Navbar.module.css";
 import { Link } from "react-router-dom";
 import ProfileIcon from "./ProfileIcon";
 import YtriumText from "../assets/YtriumText";
 import YtriumLogo from "../assets/YtriumLogo";
+import NavItem from "./NavItem";
+
+import Button from "./Button";
 
 const Navbar = ({ userType, login, signup, instructorSignup }) => {
-
   const [navContent, setNavContent] = useState();
 
   useEffect(() => {
-    switch(userType){
-      case (null || undefined):
+    switch (userType) {
+      case null || undefined:
         setNavContent(
-          <div className={navStyles.btnGroup}>
-            <button className={styles.btnText} onClick={() => instructorSignup()}>
+          <div className="flex items-center gap-4">
+            <Button variant="text" onClick={() => instructorSignup()}>
               Inscreva-se como um instrutor
-            </button>
-            <button className={styles.btnSecondary} onClick={() => login()}>
+            </Button>
+            <Button variant="secondary" onClick={() => login()}>
               Fazer login
-            </button>
-            <button className={styles.btn} onClick={() => signup()}>
-              Cadastre-se
-            </button>
+            </Button>
+            <Button onClick={() => signup()}>Cadastre-se</Button>
           </div>
-        )
+        );
         break;
-      case 'estudante':
+      case "estudante":
         setNavContent(
           <>
-            <div className={navStyles.navGroup}>
-              <Link to={'/student'}>
-                Home
+            <div className="flex items-center gap-8">
+              <Link to={"/student"}>
+                <NavItem>Home</NavItem>
               </Link>
-              <Link to={'/student/subscriptions'}>
-                Inscrições
+              <Link to={"/student/subscriptions"}>
+                <NavItem>Inscrições</NavItem>
               </Link>
-              <Link to={'/student/explore'}>
-                Explorar
+              <Link to={"/student/explore"}>
+                <NavItem>Explorar</NavItem>
               </Link>
-
             </div>
             <ProfileIcon />
           </>
-        )
+        );
         break;
-      case 'instrutor':
+      case "instrutor":
         setNavContent(
           <>
-            <div className={navStyles.navGroup}>
-              <Link to={'/instructor'}>
-                Home
+            <div className="flex items-center gap-8">
+              <Link to={"/instructor"}>
+                <NavItem>Home</NavItem>
               </Link>
-              <Link to={'/instructor/courses'}>
-                Meus cursos
+              <Link to={"/instructor/courses"}>
+                <NavItem>Meus cursos</NavItem>
               </Link>
-
             </div>
             <ProfileIcon />
           </>
-        )
+        );
         break;
-      case 'admin':
+      case "admin":
         setNavContent(
           <>
-            <div className={navStyles.navGroup}>
-              <Link to={'/admin'}>
-                Home
+            <div className="flex items-center gap-8">
+              <Link to={"/admin"}>
+                <NavItem>Home</NavItem>
               </Link>
-              <Link to={'/admin/categories'}>
-                Categorias
+              <Link to={"/admin/categories"}>
+                <NavItem>Categorias</NavItem>
               </Link>
-              <Link to={'/admin/users'}>
-                Usuários
+              <Link to={"/admin/users"}>
+                <NavItem>Usuários</NavItem>
               </Link>
-              <Link to={'/admin/courses'}>
-                Cursos
+              <Link to={"/admin/courses"}>
+                <NavItem>Cursos</NavItem>
               </Link>
-              <Link to={'/admin/badges'}>
-                Insígnias
+              <Link to={"/admin/badges"}>
+                <NavItem>Insígnias</NavItem>
               </Link>
-              
-
             </div>
             <ProfileIcon />
           </>
-        )
+        );
         break;
     }
-  }, [userType])
+  }, [userType]);
 
   return (
     <>
-    <header>
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: '1px'
-      }}>
-        <YtriumLogo />
-        <YtriumText />
-      </div>
-      {/* <img src={ytrium} alt="ytrium logo" className={navStyles.logo} /> */}
-      {navContent}
-    </header>
+      <header className="py-3 px-24 flex items-center justify-between">
+        <div className="flex items-center gap-1">
+          <YtriumLogo />
+          <YtriumText />
+        </div>
+        {/* <img src={ytrium} alt="ytrium logo" className={navStyles.logo} /> */}
+        {navContent}
+      </header>
     </>
   );
 };

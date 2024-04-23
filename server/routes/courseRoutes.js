@@ -12,7 +12,7 @@ function isAuthenticated(req, res, next) {
 
 router.get("/getAll", isAuthenticated, (req, res) => {
 
-  const q = "select c.cur_id, c.cur_titulo, c.cur_status, c.cur_qtdInscritos, u.usu_nome, json_arrayagg(ca.cat_descricao) as categorias from cur_curso c inner join cct_curso_categoria cc on cc.cct_cursoId = c.cur_id inner join cat_categoria ca on cc.cct_categoriaId = ca.cat_id inner join usu_usuario u on u.usu_id = c.cur_instrutorId where c.cur_status = 'publico' group by c.cur_id;";
+  const q = "select c.cur_id, c.cur_titulo, c.cur_status, c.cur_qtdInscritos, c.cur_dificuldade, u.usu_nome, json_arrayagg(ca.cat_descricao) as categorias from cur_curso c inner join cct_curso_categoria cc on cc.cct_cursoId = c.cur_id inner join cat_categoria ca on cc.cct_categoriaId = ca.cat_id inner join usu_usuario u on u.usu_id = c.cur_instrutorId where c.cur_status = 'publico' group by c.cur_id;";
   db.query(q, 'publico', (err, result) => {
     if(err) {
       return res.status(400).json(err);

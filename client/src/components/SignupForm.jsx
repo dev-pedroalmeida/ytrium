@@ -1,6 +1,12 @@
 import React, { useState } from 'react'
 import axios from 'axios';
 import styles from "../styles/styles.module.css";
+import FormTitle from "./form/FormTitle";
+import FormLegend from "./form/FormLegend";
+import FormLabel from "./form/FormLabel";
+import FormInput from "./form/FormInput";
+import Button from "./Button";
+import Overlay from "./Overlay";
 
 const SignupForm = ( {userType = 'estudante', closeForm, login} ) => {
   
@@ -52,39 +58,47 @@ const SignupForm = ( {userType = 'estudante', closeForm, login} ) => {
   }
   
   return (
-    <div className={styles.overlay}>
-      <form id='signupform' className={styles.lsform} onSubmit={handleSignup}>
-        <div className={styles.formTitle}>
+    <Overlay onClick={closeForm}>
+      <form id='signupform' onSubmit={handleSignup} onClick={(e) => e.stopPropagation()}
+            className="flex flex-col gap-4 p-8 pt-12 bg-white rounded-md shadow-lg min-w-[380px]">
+        <FormTitle>
           Inscreva-se
-          <p className={styles.formLegend}>
+          <FormLegend>
             Torne-se um {userType}!
-          </p>
-        </div>
-        {error && <div className={styles.error}>{error}</div>}
-        <label>
-          Nome:
-          <input required name='nome' type='text' placeholder='Nome Exemplo' onChange={handleInput} />
-        </label>
+          </FormLegend>
+        </FormTitle>
         
-        <label>
+        {error && 
+        <div className="bg-red-100 text-red-500 px-2 py-1 rounded-lg">
+          {error}
+        </div>}
+        
+        <FormLabel>
+          Nome:
+          <FormInput required={true} name='nome' type='text' placeholder='Nome Exemplo' onChange={handleInput} />
+        </FormLabel>
+        
+        <FormLabel>
           Email:
-          <input required name='email' type='email' placeholder='email@exemplo.com' onChange={handleInput} />
-        </label>
+          <FormInput required={true} name='email' type='email' placeholder='email@exemplo.com' onChange={handleInput} />
+        </FormLabel>
 
-        <label>
+        <FormLabel>
           Senha:
-          <input required name='senha' type='password' placeholder='******' onChange={handleInput} />
-        </label>
+          <FormInput required name='senha' type='password' placeholder='******' onChange={handleInput} />
+        </FormLabel>
 
-        <label>
-          Confirma senha:
-          <input required name='confirmaSenha' type='password' placeholder='******' onChange={handleInput} />
-        </label>
+        <FormLabel>
+          Confirmar senha:
+          <FormInput required name='confirmaSenha' type='password' placeholder='******' onChange={handleInput} />
+        </FormLabel>
 
-        <button type='submit' className={styles.btn}>Cadastrar</button>
-        <button onClick={() => closeForm()} className={styles.btnSecondary}>Cancelar</button>
+        <div className="flex items-center gap-2 justify-end">
+          <Button variant="secondary" onClick={() => closeForm()}>Cancelar</Button>
+          <Button type='submit'>Cadastrar</Button>
+        </div>
       </form>
-    </div>
+    </Overlay>
   )
 }
 

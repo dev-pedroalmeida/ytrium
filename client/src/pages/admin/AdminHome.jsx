@@ -1,87 +1,93 @@
-import React, { useEffect, useState } from 'react';
-import styles from '../../styles/styles.module.css';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import Container from "../../components/Container";
+import ContainerHeader from "../../components/ContainerHeader";
+import ContainerTitle from "../../components/ContainerTitle";
+import CoursesList from "../../components/courseCard/CoursesList";
+import CourseCard from "../../components/courseCard/CourseCard";
+import Button from "../../components/Button";
 
 const AdminHome = () => {
-
   const [pendingCourses, setPendingCourses] = useState([]);
 
   const navigate = useNavigate();
 
   function publishCourse(id) {
-
-    axios.put('http://localhost:3000/admin/publishCourse', {id}, {
-      withCredentials: true,
-    })
-    .catch(err => {
-      console.log(err);
-      if(err.response.status == 400) {
-        return setError("Erro!")
-      }
-    })
-    .then(res => {
-      console.log(res);
-      setPendingCourses(pendingCourses.filter(c => {
-        return c.cur_id !== id;
-      }))
-    })
+    axios
+      .put(
+        "http://localhost:3000/admin/publishCourse",
+        { id },
+        {
+          withCredentials: true,
+        }
+      )
+      .catch((err) => {
+        console.log(err);
+        if (err.response.status == 400) {
+          return setError("Erro!");
+        }
+      })
+      .then((res) => {
+        console.log(res);
+        setPendingCourses(
+          pendingCourses.filter((c) => {
+            return c.cur_id !== id;
+          })
+        );
+      });
   }
 
-  const pendingCoursesList = pendingCourses.map(course => {
-    return (
-      <div className={styles.courseCard} key={course.cur_id}>
-        <div className={styles.courseCardContent}>
-          <div className={styles.courseTitle}>{course.cur_titulo}</div>
-
-          <div className={styles.courseCategoriasList}>
-            {
-              course.categorias.map((cat, index) => {
-                return <div key={index} className={styles.courseCategoria}>{cat}</div>
-              })
-            }
-          </div>
-        </div>
-
-        <div className={styles.courseFooter}>
-          <button className={styles.btn}
-                  onClick={() => publishCourse(course.cur_id)}
-          >
-            Tornar público
-          </button>
-        </div>
-      </div>
-    )
-  });
-
-
   useEffect(() => {
-    axios.get("http://localhost:3000/admin/pendingCourses", {
-      withCredentials: true,
-    })
-    .then(res => {
-      console.log(res)
-      setPendingCourses(res.data);
-    })
-  }, [])
+    axios
+      .get("http://localhost:3000/admin/pendingCourses", {
+        withCredentials: true,
+      })
+      .then((res) => {
+        console.log(res);
+        setPendingCourses(res.data);
+      });
+  }, []);
 
   return (
-    <div className={styles.container}>
-      <div className={styles.containerHeader}>
-        <h1>Cursos pendentes</h1>
-      </div>
+    <Container>
+      <ContainerHeader>
+        <ContainerTitle>Cursos pendentes</ContainerTitle>
+      </ContainerHeader>
 
-      <div className={styles.coursesList}>
-        {
-        pendingCourses.length > 0 
-          ?
-          pendingCoursesList
-          :
+      <CoursesList>
+        {pendingCourses.length > 0 ? (
+          pendingCourses.map((course) => {
+            return (
+              <CourseCard.Root key={course.cur_id}>
+                <CourseCard.Title>{course.cur_titulo}</CourseCard.Title>
+
+                <CourseCard.Content>
+                  <CourseCard.CategoriasList>
+                    {course.categorias.map((cat, index) => {
+                      return (
+                        <CourseCard.Categoria key={index}>
+                          {cat}
+                        </CourseCard.Categoria>
+                      );
+                    })}
+                  </CourseCard.CategoriasList>
+                </CourseCard.Content>
+
+                <CourseCard.Footer>
+                  <Button onClick={() => publishCourse(course.cur_id)}>
+                    Tornar público
+                  </Button>
+                </CourseCard.Footer>
+              </CourseCard.Root>
+            );
+          })
+        ) : (
           <p>Nenhum curso encontrado!</p>
-        }
-      </div>
-    </div>
-  )
-}
+        )}
+      </CoursesList>
+    </Container>
+  );
+};
 
-export default AdminHome
+export default AdminHome;

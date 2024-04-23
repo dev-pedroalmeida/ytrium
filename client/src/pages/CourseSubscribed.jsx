@@ -3,10 +3,23 @@ import { AuthContext } from "../contexts/AuthContext";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import styles from "../styles/styles.module.css";
-import BackIcon from "../assets/BackIcon";
 import NextIcon from "../assets/NextIcon";
 import DescEditor from "../components/DescEditor";
 import QuizzSubmit from "../components/QuizzSubmit";
+import Container from "../components/Container";
+import Loading from "../components/Loading";
+import ContainerHeader from "../components/ContainerHeader";
+import ContainerTitle from "../components/ContainerTitle";
+import {
+  Check,
+  ChevronLeft,
+  ListTodo,
+  Sparkle,
+  SquareLibrary,
+  Text,
+} from "lucide-react";
+import Button from "../components/Button";
+import Overlay from "../components/Overlay";
 
 const CourseSubscribed = () => {
   const { user } = useContext(AuthContext);
@@ -125,7 +138,7 @@ const CourseSubscribed = () => {
     let notComplete = false;
     let newCourse = course;
 
-    if(newCourse.modulos[selectedModule].quizzes) {
+    if (newCourse.modulos[selectedModule].quizzes) {
       newCourse.modulos[selectedModule].quizzes.forEach((qui) => {
         if (qui.completo == 0) {
           notComplete = true;
@@ -208,317 +221,272 @@ const CourseSubscribed = () => {
   }, [courseId]);
 
   return (
-    <div className={styles.container}>
-      {loading ? (
-        <div>Carregando...</div>
-      ) : (
-        <>
-          <div className={styles.containerHeader}>
-            <h1>{course?.cur_titulo}</h1>
-
-            {course?.alc_status == 1 &&
-              <div className={styles.quizzComplete} style={{cursor: 'pointer'}} onClick={() => navigate('/student/profile')}>
-                Completo
-                <NextIcon />
-              </div>
-            }
+    <>
+      {
+        courseCompleted &&
+        <Overlay onClick={() => setCourseCompleted(false)}>
+          <div className="p-6 shadow-lg rounded-lg bg-white flex flex-col gap-4 w-[45ch] text-center">
+            <div className="flex items-center gap-2">
+              <Sparkle color="#F59E0B" />
+              <div className="bg-amber-500 h-0.5 flex-1"></div>
+            </div>
+            <div className="flex items-center gap-2 justify-center">
+              {/* <div
+                className={`p-1 rounded-lg bg-amber-200/50 text-amber-400/80`}
+              >
+                <Check size={20} strokeWidth={6} />
+              </div> */}
+              <h1 className="text-3xl font-bold">Parabéns!</h1>
+            </div>
+            <div className="text-lg font-medium">
+              Você completo o curso {course?.cur_titulo}
+            </div>
+            <div className="flex justify-end items-center gap-8 mt-8">
+              <Button variant="text"
+                onClick={() => setCourseCompleted(false)}
+              >
+                Fechar
+              </Button>
+              <Button
+                onClick={() => navigate("/student/profile")}
+              >
+                Ver Certificado
+              </Button>
+            </div>
           </div>
+        </Overlay>
+      }
+      <Container>
+        {loading ? (
+          <Loading />
+        ) : (
+          <>
+            <ContainerHeader>
+              <ContainerTitle>{course?.cur_titulo}</ContainerTitle>
 
-          <div className={styles.moduleContainer}>
-            <div className={styles.moduleList}>
-              {modulos.length > 0 &&
-                modulos?.map((modulo) => {
-                  return (
-                    <div
-                      className={
-                        selectedModule === modulo.index
-                          ? styles.selected + " " + styles.module
-                          : styles.module
-                      }
-                      key={modulo.index}
-                    >
-                      <div> ▥ </div>
-                      <span
+              {course?.alc_status == 1 && (
+                <div
+                  className="flex items-center gap-2 bg-amber-100 hover:bg-orange-200/70 text-amber-500 font-semibold py-1 px-2 rounded-lg cursor-pointer transition"
+                  onClick={() => navigate("/student/profile")}
+                >
+                  Baixar certificado
+                  <NextIcon />
+                </div>
+              )}
+            </ContainerHeader>
+
+            <div className="grid grid-cols-4 gap-16">
+              <div className="flex flex-col py-2 gap-2">
+                {modulos.length > 0 &&
+                  modulos?.map((modulo) => {
+                    return (
+                      <div
+                        className={`p-2 rounded-lg cursor-pointer text-ellipsis flex items-center gap-1 text-amber-500 font-bold
+                                    transition hover:ring-2 hover:ring-amber-400
+                                    ${
+                                      selectedModule === modulo.index &&
+                                      "bg-amber-200/60"
+                                    }`}
+                        key={modulo.index}
                         onClick={() => {
                           handleSelectModule(modulo.index);
                         }}
                       >
-                        {modulo.titulo}
-                      </span>
-                      <div
-                        className={
-                          modulo.completo == 0
-                            ? styles.statusIcon
-                            : styles.statusIcon + " " + styles.complete
-                        }
-                        onClick={() => {
-                          handleCompleteModule(modulo.id)
-                        }}
-                      >
-                        <svg
-                          width="14"
-                          height="14"
-                          viewBox="0 0 18 14"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
+                        <SquareLibrary size={18} />
+                        <span className="overflow-hidden text-nowrap text-ellipsis flex-1">
+                          {modulo.titulo}
+                        </span>
+                        <div
+                          className={`p-1 rounded-lg bg-amber-200/50 text-amber-50
+                                      ${
+                                        modulo.completo == 1 &&
+                                        "text-orange-400/80"
+                                      }`}
+                          onClick={() => {
+                            handleCompleteModule(modulo.id);
+                          }}
                         >
-                          <path
-                            d="M3.0293 6.96413L6.98116 10.916L14.8988 3.01233"
-                            stroke="white"
-                            strokeWidth="5.25538"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
+                          <Check size={18} strokeWidth={6} />
+                        </div>
                       </div>
-                    </div>
-                  );
-                })}
-            </div>
+                    );
+                  })}
+              </div>
 
-            <div className={styles.moduleContent}>
-              {selectedModule != -1 ? (
-                <>
-                  {selectedConQuizz == -1 ? (
-                    <>
-                      {listConQuizz.map((cq) => {
-                        if (cq.hasOwnProperty("material")) {
-                          return (
-                            <div
-                              className={styles.module}
-                              key={cq.index}
-                              onClick={() => {
-                                handleSelectConQuizz(cq.index, cq.completo);
-                              }}
-                            >
-                              Conteúdo:&nbsp;
-                              {cq.titulo}
+              <div className="col-span-3 flex flex-col gap-4 p-2">
+                {selectedModule != -1 ? (
+                  <>
+                    {selectedConQuizz == -1 ? (
+                      <>
+                        {listConQuizz.map((cq) => {
+                          if (cq.hasOwnProperty("material")) {
+                            return (
                               <div
-                                className={
-                                  cq.completo == 1
-                                    ? styles.statusIcon + " " + styles.complete
-                                    : styles.statusIcon
-                                }
+                                className={`py-2 px-8 rounded-lg cursor-pointer text-ellipsis flex items-center gap-1 text-zinc-800 font-bold
+                                            transition hover:ring-2 hover:ring-amber-400`}
+                                key={cq.index}
+                                onClick={() => {
+                                  handleSelectConQuizz(cq.index, cq.completo);
+                                }}
                               >
-                                <svg
-                                  width="14"
-                                  height="14"
-                                  viewBox="0 0 18 14"
-                                  fill="none"
-                                  xmlns="http://www.w3.org/2000/svg"
+                                <Text size={20} />
+                                <span className="overflow-hidden grow">
+                                  {cq.titulo}
+                                </span>
+                                <div
+                                  className={`p-1 rounded-lg bg-amber-200/50 text-amber-50
+                                      ${
+                                        cq.completo == 1 && "text-orange-400/80"
+                                      }`}
                                 >
-                                  <path
-                                    d="M3.0293 6.96413L6.98116 10.916L14.8988 3.01233"
-                                    stroke="white"
-                                    strokeWidth="5.25538"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                  />
-                                </svg>
+                                  <Check size={18} strokeWidth={6} />
+                                </div>
                               </div>
-                            </div>
-                          );
-                        } else {
-                          return (
-                            <div
-                              className={styles.module}
-                              key={cq.id}
-                              onClick={() => {
-                                handleSelectConQuizz(cq.index, cq.completo);
-                              }}
-                            >
-                              Quizz:&nbsp;
-                              {cq.titulo}
+                            );
+                          } else {
+                            return (
                               <div
-                                className={
-                                  cq.completo == 1
-                                    ? styles.statusIcon + " " + styles.complete
-                                    : styles.statusIcon
-                                }
+                                className={`py-2 px-8 rounded-lg cursor-pointer text-ellipsis flex items-center gap-1 text-zinc-800 font-bold
+                                          transition hover:ring-2 hover:ring-amber-400`}
+                                key={cq.id}
+                                onClick={() => {
+                                  handleSelectConQuizz(cq.index, cq.completo);
+                                }}
                               >
-                                <svg
-                                  width="14"
-                                  height="14"
-                                  viewBox="0 0 18 14"
-                                  fill="none"
-                                  xmlns="http://www.w3.org/2000/svg"
+                                <ListTodo size={20} />
+                                <span className="overflow-hidden grow">
+                                  {cq.titulo}
+                                </span>
+                                <div
+                                  className={`p-1 rounded-lg bg-amber-200/50 text-amber-50
+                                      ${
+                                        cq.completo == 1 && "text-orange-400/80"
+                                      }`}
                                 >
-                                  <path
-                                    d="M3.0293 6.96413L6.98116 10.916L14.8988 3.01233"
-                                    stroke="white"
-                                    strokeWidth="5.25538"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                  />
-                                </svg>
+                                  <Check size={18} strokeWidth={6} />
+                                </div>
                               </div>
-                            </div>
-                          );
-                        }
-                      })}
-                    </>
-                  ) : (
-                    <>
-                      <div className={styles.moduleHeader}>
-                        <button
-                          onClick={() => handleSelectConQuizz(-1)}
-                          className={styles.btnText}
-                        >
-                          <BackIcon />
-                          Voltar
-                        </button>
+                            );
+                          }
+                        })}
+                      </>
+                    ) : (
+                      <>
+                        <div className="flex items-center justify-between">
+                          <Button
+                            variant="action"
+                            onClick={() => handleSelectConQuizz(-1)}
+                          >
+                            <ChevronLeft size={20} />
+                          </Button>
 
-                        <h2>{listConQuizz[selectedConQuizz].titulo}</h2>
-
-                        <div className={current == 1 && styles.quizzComplete}>
-                          {listConQuizz[selectedConQuizz].hasOwnProperty(
-                            "porcentagemAcertos"
-                          ) &&
-                            current == 1 && (
-                              <div>
-                                {
-                                  listConQuizz[selectedConQuizz]
-                                    .porcentagemAcertos
-                                }%
-                              </div>
-                            )}
+                          <h2 className="text-xl font-bold">
+                            {listConQuizz[selectedConQuizz].titulo}
+                          </h2>
 
                           <div
                             className={
-                              current == 1
-                                ? styles.statusIcon + " " + styles.complete
-                                : styles.statusIcon
+                              current == 1 &&
+                              "flex items-center gap-2 text-amber-500 font-medium py-1 px-2 rounded-lg"
                             }
                           >
-                            <svg
-                              width="14"
-                              height="14"
-                              viewBox="0 0 18 14"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
+                            {listConQuizz[selectedConQuizz].hasOwnProperty(
+                              "porcentagemAcertos"
+                            ) &&
+                              current == 1 && (
+                                <div>
+                                  {
+                                    listConQuizz[selectedConQuizz]
+                                      .porcentagemAcertos
+                                  }
+                                  %
+                                </div>
+                              )}
+
+                            <div
+                              className={`p-1 rounded-lg bg-amber-200/50 text-amber-50
+                              ${current == 1 && "text-orange-400/80"}`}
                             >
-                              <path
-                                d="M3.0293 6.96413L6.98116 10.916L14.8988 3.01233"
-                                stroke="white"
-                                strokeWidth="5.25538"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                              />
-                            </svg>
+                              <Check size={18} strokeWidth={6} />
+                            </div>
                           </div>
                         </div>
-                      </div>
 
-                      {listConQuizz[selectedConQuizz].hasOwnProperty(
-                        "material"
-                      ) ? (
-                        <>
-                          <div>
-                            {listConQuizz[selectedConQuizz].videoLink && (
-                              <>
-                                <h3>Vídeo:</h3>
-                                <iframe
-                                  width="600"
-                                  height="315"
-                                  src={listConQuizz[selectedConQuizz].videoLink}
-                                  title="YouTube video player"
-                                  frameBorder="0"
-                                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
-                                  allowFullScreen
-                                ></iframe>
-                              </>
-                            )}
-                          </div>
-                          <div>
-                            {listConQuizz[selectedConQuizz].material && (
-                              <>
-                                <h3>Material escrito:</h3>
-                                <DescEditor
-                                  initialValue={JSON.parse(
-                                    listConQuizz[selectedConQuizz].material
-                                  )}
-                                  readOnly={true}
-                                />
-                                {/* <p>{listConQuizz[selectedConQuizz].material}</p> */}
-                              </>
-                            )}
-                          </div>
+                        {listConQuizz[selectedConQuizz].hasOwnProperty(
+                          "material"
+                        ) ? (
+                          <>
+                            <div>
+                              {listConQuizz[selectedConQuizz].videoLink && (
+                                <>
+                                  {/* <h3>Vídeo:</h3> */}
+                                  <iframe
+                                    width="600"
+                                    height="315"
+                                    src={
+                                      listConQuizz[selectedConQuizz].videoLink
+                                    }
+                                    title="YouTube video player"
+                                    frameBorder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+                                    allowFullScreen
+                                  ></iframe>
+                                </>
+                              )}
+                            </div>
+                            <div className="w-[80ch] self-center pt-4">
+                              {listConQuizz[selectedConQuizz].material && (
+                                <>
+                                  {/* <h3 className="text-lg font-medium mb-4">Material escrito:</h3> */}
+                                  <DescEditor
+                                    initialValue={JSON.parse(
+                                      listConQuizz[selectedConQuizz].material
+                                    )}
+                                    readOnly={true}
+                                  />
+                                  {/* <p>{listConQuizz[selectedConQuizz].material}</p> */}
+                                </>
+                              )}
+                            </div>
 
-                          <button
-                            className={styles.btn}
-                            style={{ alignSelf: "center" }}
-                            onClick={() =>
-                              handleCompleteContent(
-                                listConQuizz[selectedConQuizz].id
-                              )
-                            }
-                            disabled={current == 1}
-                          >
-                            Completar
-                          </button>
-                        </>
-                      ) : (
-                        <>
-                          <QuizzSubmit
-                            quizz={listConQuizz[selectedConQuizz]}
-                            current={current}
-                            handleSaveQuizz={(quizzId, porAcertos) =>
-                              handleSaveQuizz(quizzId, porAcertos)
-                            }
-                          />
-                        </>
-                      )}
-                    </>
-                  )}
-                </>
-              ) : (
-                <p className={styles.selecione}>Selecione um módulo</p>
-              )}
-            </div>
-          </div>
-        </>
-      )}
-      {/* <div className={styles.log} onClick={() => console.log(answer)}>
-        logger 
-      </div> */}
-
-      {courseCompleted && (
-        <div className={styles.overlay}>
-          <div className={styles.modal}>
-            <div className={styles.modalHeader}>
-              <div className={styles.statusIcon + " " + styles.complete}>
-                <svg
-                  width="14"
-                  height="14"
-                  viewBox="0 0 18 14"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M3.0293 6.96413L6.98116 10.916L14.8988 3.01233"
-                    stroke="white"
-                    strokeWidth="5.25538"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
+                            <Button
+                              classes="self-center"
+                              onClick={() =>
+                                handleCompleteContent(
+                                  listConQuizz[selectedConQuizz].id
+                                )
+                              }
+                              disabled={current == 1}
+                            >
+                              Completar
+                            </Button>
+                          </>
+                        ) : (
+                          <>
+                            <QuizzSubmit
+                              quizz={listConQuizz[selectedConQuizz]}
+                              current={current}
+                              handleSaveQuizz={(quizzId, porAcertos) =>
+                                handleSaveQuizz(quizzId, porAcertos)
+                              }
+                            />
+                          </>
+                        )}
+                      </>
+                    )}
+                  </>
+                ) : (
+                  <p className="font-medium text-lg p-2">Selecione um módulo</p>
+                )}
               </div>
-              <h1>Parabéns!</h1>
             </div>
-            Você completo o curso {course.cur_titulo}
-            <div className={styles.modalRow}>
-              <button
-                className={styles.btnSecondary}
-                onClick={() => setCourseCompleted(false)}
-              >
-                Fechar
-              </button>
-              <button className={styles.btn} onClick={() => navigate('/student/profile')}>Ver Certificado</button>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
+          </>
+        )}
+        {/* <div className={styles.log} onClick={() => console.log(answer)}>
+          logger 
+        </div> */}
+      </Container>
+    </>
   );
 };
 

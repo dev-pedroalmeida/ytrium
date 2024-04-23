@@ -4,6 +4,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "../contexts/AuthContext.jsx";
 import DescEditor from "../components/DescEditor";
+import Container from "../components/Container";
+import CourseCard from "../components/courseCard/CourseCard";
+import Button from "../components/Button";
+import { Loader2, SquareLibrary } from "lucide-react";
+import Loading from "../components/Loading.jsx";
 
 const CoursePage = () => {
   const { user } = useContext(AuthContext);
@@ -40,71 +45,65 @@ const CoursePage = () => {
         setCourse(res.data);
         setTimeout(() => {
           setLoading(false);
-        }, 1000)
-      })
+        }, 1000);
+      });
   }, [courseId]);
 
   return (
-    <div className={styles.container}>
+    <Container>
       {loading ? (
-        <div>Carregando...</div>
+        <Loading />
       ) : (
         <>
-          <div className={styles.courseHeader}>
-            <div className={styles.courseMainInfo}>
-              <div className={styles.courseMainInfoSection}>
-                <h1>{course.cur_titulo}</h1>
-                <div className={styles.insInfo}>
-                  <div className={styles.personIcon}></div>
+          <div className="flex gap-2">
+            <div className="flex-1 flex justify-between pr-8 border-r-2 border-gray-100">
+              <div className="flex flex-col gap-4">
+                <h1 className="text-4xl font-bold">{course.cur_titulo}</h1>
+                <div className="text-lg font-medium flex items-center gap-2">
+                  <div className="rounded-full w-8 h-8 bg-gradient-to-b from-amber-500 to-amber-400"></div>
                   {course.usu_nome}
                 </div>
               </div>
-              <div className={styles.courseMainInfoSection}>
-                <div className={styles.courseDificulty}>
+              <div className="flex flex-col gap-4">
+                <div className="px-2 py-1 rounded text-white font-medium bg-gradient-to-tr from-amber-400/90 to-amber-500/90">
                   {course.cur_dificuldade}-{course.cur_qtdExperiencia} xp
                 </div>
                 <div>
-                  <div className={styles.courseCategoriasList}>
+                  <CourseCard.CategoriasList>
                     {course.categorias &&
                       course.categorias.map((cat) => {
                         return (
-                          <div key={cat.id} className={styles.courseCategoria}>
+                          <CourseCard.Categoria key={cat.id}>
                             {cat.descricao}
-                          </div>
+                          </CourseCard.Categoria>
                         );
                       })}
-                  </div>
+                  </CourseCard.CategoriasList>
                 </div>
               </div>
             </div>
 
-            <div className={styles.courseSecInfo}>
+            <div className="flex flex-col gap-2 items-end pl-20">
               {user?.tipo == "estudante" &&
                 (course.alc_status == null ? (
-                  <button
-                    className={styles.btn + " " + styles.large}
-                    onClick={() => subscribe()}
-                  >
-                    Inscreva-se
-                  </button>
+                  <Button variant="large" onClick={() => subscribe()}>Inscreva-se</Button>
                 ) : (
-                  <button
-                    className={styles.btn + " " + styles.large}
+                  <Button variant="large"
                     onClick={() => navigate(`/course/subscribed/${courseId}`)}
                   >
                     Continuar
-                  </button>
+                  </Button>
                 ))}
               <p>
                 {course.cur_qtdInscritos}
-                &nbsp;inscritos
+                &nbsp;{course.cur_qtdInscritos == 1 ? "inscrito" : "inscritos"}
               </p>
             </div>
           </div>
 
-          <div className={styles.courseContent}>
+          <div className="grid grid-cols-[5fr_3fr] gap-8 my-14">
             <div>
-              <h2>Descrição</h2>
+              <h2 className="text-2xl font-semibold mb-2">Descrição</h2>
               {/* <p style={{marginTop: '8px'}}>{course.cur_descricao}</p> */}
               <DescEditor
                 initialValue={JSON.parse(course.cur_descricao)}
@@ -113,15 +112,15 @@ const CoursePage = () => {
             </div>
 
             <div>
-              <h2>Módulos</h2>
+              <h2 className="text-2xl font-semibold mb-2">Módulos</h2>
 
-              <div className={styles.moduleList} style={{ marginTop: "8px" }}>
+              <div className="flex flex-col py-2 gap-2 mt-2">
                 {course.modulos?.length > 0 ? (
                   course.modulos.map((modulo, index) => {
                     return (
-                      <div className={styles.module} key={index}>
-                        <div> ▥ </div>
-                        <span>{modulo.titulo}</span>
+                      <div className="p-2 rounded-lg text-ellipsis flex items-center gap-1 bg-amber-100 text-amber-500 font-bold" key={index}>
+                        <SquareLibrary size={18} />
+                        <span className="overflow-hidden grow-0">{modulo.titulo}</span>
                       </div>
                     );
                   })
@@ -133,7 +132,7 @@ const CoursePage = () => {
           </div>
         </>
       )}
-    </div>
+    </Container>
   );
 };
 

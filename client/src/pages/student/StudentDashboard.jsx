@@ -1,12 +1,12 @@
-import React from 'react'
-import { Outlet } from 'react-router-dom'
+import React from "react";
+import { Outlet } from "react-router-dom";
 
 const StudentDashboard = () => {
   return (
     <>
-      <Outlet />  
+      <Outlet />
     </>
-  )
-}
+  );
+};
 
-export default StudentDashboard
+export default StudentDashboard;

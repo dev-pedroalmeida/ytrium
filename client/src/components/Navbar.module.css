@@ -1,5 +1,5 @@
 
-header {
+/* header {
     padding: 12px 96px;
     border-bottom: 1px solid var(--border-color);
 
@@ -10,24 +10,23 @@ header {
     position: sticky;
     top: 0;
     background-color: #ffffff;
-    /* backdrop-filter: blur(8px); */
-}
+} */
 
-.btnGroup {
+/* .btnGroup {
   display: flex;
-}
+} */
 
-header .btnGroup > *:not(:last-child) {
+/* header .btnGroup > *:not(:last-child) {
     margin-right: 8px;
-}
+} */
 
-.logo {
+/* .logo {
     height: 24px;
-}
+} */
 
-.navGroup {
+/* .navGroup {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 64px;
-}
+} */

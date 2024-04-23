@@ -1,4 +1,4 @@
-.overlay {
+/* .overlay {
   position: absolute;
   top: 0;
   bottom: 0;
@@ -21,8 +21,6 @@
 .btn {
   box-sizing: border-box;
   height: 32px;
-  /* min-width: 80px; */
-  /* width: fit-content; */
   padding: 8px 12px;
   background: linear-gradient(158deg, #FFB545, #FFD336);
   outline: transparent;
@@ -87,7 +85,6 @@
 }
 
 .container {
-  /* width: 80vw; */
   margin: 28px 96px;
   height: 80vh;
   padding: 20px 40px;
@@ -192,10 +189,6 @@
   gap: 16px;
 }
 
-/* h1, h2, h3 {
-  margin: 12px 0 0 0;
-} */
-
 .formTabs {
   display: flex;
   gap: 16px;
@@ -237,7 +230,6 @@
 
 .formSection {
   display: flex;
-  /* align-items: center; */
   justify-content: space-between;
   gap: 32px;
 }
@@ -302,7 +294,6 @@
 
 .courseCardContent {
   padding-bottom: 8px;
-  /* border-bottom: 1px solid var(--border-color); */
   flex: 1;
 }
 
@@ -558,4 +549,4 @@
   background-color: white;
   padding: 4px 8px;
   border-radius: 8px 0 0 0;
-}
+} */

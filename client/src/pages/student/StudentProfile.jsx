@@ -5,6 +5,13 @@ import { PDFDownloadLink, PDFViewer } from "@react-pdf/renderer";
 import Certificate from "../../components/Certificate.jsx";
 import axios from "axios";
 import DownloadIcon from "../../assets/DownloadIcon.jsx";
+import Container from "../../components/Container.jsx";
+import Loading from "../../components/Loading.jsx";
+import ContainerHeader from "../../components/ContainerHeader.jsx";
+import CoursesList from "../../components/courseCard/CoursesList.jsx";
+import CourseCard from "../../components/courseCard/CourseCard.jsx";
+import Button from "../../components/Button.jsx";
+import { Download } from "lucide-react";
 
 const StudentProfile = () => {
   const { user } = useContext(AuthContext);
@@ -12,45 +19,6 @@ const StudentProfile = () => {
   const [currentTab, setCurrentTab] = useState(1);
   const [loading, setLoading] = useState(true);
   const [courses, setCourses] = useState([]);
-
-  const coursesList = courses?.map((course) => {
-    return (
-      <div
-        className={styles.courseCard}
-        key={course.cur_id}
-        style={{ position: "relative" }}
-      >
-        <div className={styles.courseCardContent}>
-          <div className={styles.courseTitle}>{course.cur_titulo}</div>
-
-          <div className={styles.insInfo}>
-            <div className={styles.personIcon}></div>
-            {course.usu_nome}
-          </div>
-        </div>
-
-        <div className={styles.courseFooter}>
-          <PDFDownloadLink
-            document={<Certificate nome={user.nome} curso={course.cur_titulo} instrutor={course.usu_nome} />}
-            fileName="certificado.pdf"
-          >
-            {({ blob, url, loading, error }) =>
-              loading ? (
-                "Carregando..."
-              ) : (
-                <>
-                  <button className={styles.btn}>
-                    Certificado
-                    <DownloadIcon />
-                  </button>
-                </>
-              )
-            }
-          </PDFDownloadLink>
-        </div>
-      </div>
-    );
-  });
 
   useEffect(() => {
     axios
@@ -61,35 +29,33 @@ const StudentProfile = () => {
         console.log(res);
         setCourses(res.data);
       });
-      setTimeout(() => {
-        setLoading(false);
-      }, 1000);
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
   }, []);
 
   return (
     <>
-      <div className={styles.container}>
+      <Container>
         {loading ? (
-          <div style={{ textAlign: "center" }}>Carregando...</div>
+          <Loading />
         ) : (
           <>
-            <div className={styles.containerHeader}>
-              <div className={styles.profileInfo}>
-                <div
-                  className={styles.personIcon}
-                  style={{ width: "48px", height: "48px" }}
-                ></div>
+            <ContainerHeader>
+              <div className="flex items-center gap-2 justify-center flex-1">
+                <div className="rounded-full w-14 h-14 bg-gradient-to-b from-amber-500 to-amber-400"></div>
                 <div>
-                  <h1>{user.nome}</h1>
+                  <h1 className="text-2xl font-bold">{user.nome}</h1>
+                  <h1 className="text-lg">{user.email}</h1>
                 </div>
               </div>
-            </div>
+            </ContainerHeader>
 
-            <div className={styles.formTabs}>
+            <div className="flex gap-4 border-b-2 border-amber-300 pb-1">
               <div
-                className={
-                  styles.formTab + " " + (currentTab == 1 && styles.active)
-                }
+                className={`cursor-pointer p-2 rounded-lg font-bold text-sm text-amber-600/70 relative ${
+                  currentTab == 1 && "text-amber-500 bg-amber-100"
+                }`}
                 onClick={() => {
                   setCurrentTab(1);
                 }}
@@ -100,22 +66,60 @@ const StudentProfile = () => {
 
             {currentTab == 1 && (
               <>
-                <div style={{ marginTop: "16px" }}>
-                  <div className={styles.coursesList}>
+                <div className="mt-4">
+                  <CoursesList>
                     {courses.length > 0 ? (
-                      coursesList
+                      courses?.map((course) => {
+                        return (
+                          <CourseCard.Root key={course.cur_id}>
+                            <CourseCard.Title>
+                              {course.cur_titulo}
+                            </CourseCard.Title>
+                            <CourseCard.Content>
+                              <div className="flex items-center gap-2 text-lg mb-4">
+                                <div className="rounded-full w-8 h-8 bg-gradient-to-b from-amber-500 to-amber-400"></div>
+                                {course.usu_nome}
+                              </div>
+                            </CourseCard.Content>
+
+                            <CourseCard.Footer>
+                              <PDFDownloadLink
+                                document={
+                                  <Certificate
+                                    nome={user.nome}
+                                    curso={course.cur_titulo}
+                                    instrutor={course.usu_nome}
+                                  />
+                                }
+                                fileName="certificado.pdf"
+                              >
+                                {({ blob, url, loading, error }) =>
+                                  loading ? (
+                                    "Carregando..."
+                                  ) : (
+                                    <Button>
+                                      Certificado
+                                      <Download size={18} />
+                                    </Button>
+                                  )
+                                }
+                              </PDFDownloadLink>
+                            </CourseCard.Footer>
+                          </CourseCard.Root>
+                        );
+                      })
                     ) : (
                       <p>Nenhum curso completo!</p>
                     )}
-                  </div>
+                  </CoursesList>
                 </div>
               </>
             )}
           </>
         )}
-      </div>
-      {/* <PDFViewer>
-      <Certificate nome={user.nome} />
+      </Container>
+      {/* <PDFViewer width={'400px'} height={'300px'}>
+        <Certificate nome={user?.nome} />
       </PDFViewer> */}
     </>
   );

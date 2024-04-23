@@ -1,12 +1,16 @@
-import React from 'react';
-import styles from '../../styles/styles.module.css';
+import React from "react";
+import Container from "../../components/Container";
+import ContainerHeader from "../../components/ContainerHeader";
+import ContainerTitle from "../../components/ContainerTitle";
 
 const InstructorCourses = () => {
   return (
-    <div className={styles.container}>
-      InstructorCourses
-    </div>
-  )
-}
+    <Container>
+      <ContainerHeader>
+        <ContainerTitle>InstructorCourses</ContainerTitle>
+      </ContainerHeader>
+    </Container>
+  );
+};
 
-export default InstructorCourses
+export default InstructorCourses;

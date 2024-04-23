@@ -12,9 +12,16 @@ import DescEditor from "../../components/DescEditor";
 import { withHistory } from "slate-history";
 import { withReact } from "slate-react";
 import { createEditor } from "slate";
+import Container from "../../components/Container";
+import ContainerTitle from "../../components/ContainerTitle";
+import ContainerHeader from "../../components/ContainerHeader";
+import Button from "../../components/Button";
+import FormLabel from "../../components/form/FormLabel";
+import FormInput from "../../components/form/FormInput";
+import { ListTodo, Plus, SquareLibrary, Text, Trash } from "lucide-react";
+import FormSelect from "../../components/form/FormSelect";
 
 const NewCourse = () => {
-
   const [newCourse, setNewCourse] = useState({
     titulo: "",
   });
@@ -35,27 +42,26 @@ const NewCourse = () => {
   const [actionContent, setActionContent] = useState();
   const [openQuizz, setOpenQuizz] = useState(false);
   const [actionQuizz, setActionQuizz] = useState();
-  
+
   const [categories, setCategories] = useState();
 
   const [listConQuizz, setListConQuizz] = useState([]);
-  const editor = useMemo(() => withHistory(withReact(createEditor())), [])
+  const editor = useMemo(() => withHistory(withReact(createEditor())), []);
   const [desc, setDesc] = useState([
     {
       type: "paragraph",
-      children: [{ text: "Insira uma descrição!" }]
-    }
+      children: [{ text: "Insira uma descrição!" }],
+    },
   ]);
 
   const [error, setError] = useState();
 
-
   const navigate = useNavigate();
 
   const dificultyOptions = [
-    { value: "iniciante", label: "Iniciante - 1000 XP", xp: 1000 },
-    { value: "intermediário", label: "Intermediário - 2000 XP", xp: 2000 },
-    { value: "avançado", label: "Avançado - 3000 XP", xp: 3000 },
+    { value: "Iniciante", label: "Iniciante - 1000 XP", xp: 1000 },
+    { value: "Intermediário", label: "Intermediário - 2000 XP", xp: 2000 },
+    { value: "Avançado", label: "Avançado - 3000 XP", xp: 3000 },
   ];
 
   const selectStyles = {
@@ -94,46 +100,41 @@ const NewCourse = () => {
 
     courseData.modulos = modulos;
 
-    if(courseData.modulos.length < 1) {
+    if (courseData.modulos.length < 1) {
       setError("O curso precisa de pelo menos um módulo!");
       setCurrentTab(2);
       return;
     }
 
-    courseData.modulos.forEach(mod => {
-      if(mod.conteudos.length <= 0) {
+    courseData.modulos.forEach((mod) => {
+      if (mod.conteudos.length <= 0) {
         setError("Cada módulo precisa de pelo menos um conteúdo!");
         setCurrentTab(2);
         return;
       }
-    })
-    
-    
-    setTimeout(() => {
-      if(error == false ||
-        error == undefined ||
-        error == '') {
-        axios
-        .post("http://localhost:3000/instructor/newCourse", courseData, {
-          withCredentials: true,
-        })
-        .catch((err) => {
-          console.log(err);
-          if (err.response.status == 400) {
-            return setError("Erro!");
-          }
-        })
-        .then((res) => {
-          console.log(res);
-          if(res.status == 200) {
-            navigate('/instructor');
-          }
-        });
-      }
-    }, 1000)
-    
+    });
 
-  };
+    setTimeout(() => {
+      if (error == false || error == undefined || error == "") {
+        axios
+          .post("http://localhost:3000/instructor/newCourse", courseData, {
+            withCredentials: true,
+          })
+          .catch((err) => {
+            console.log(err);
+            if (err.response.status == 400) {
+              return setError("Erro!");
+            }
+          })
+          .then((res) => {
+            console.log(res);
+            if (res.status == 200) {
+              navigate("/instructor");
+            }
+          });
+      }
+    }, 1000);
+  }
 
   useEffect(() => {
     axios
@@ -156,259 +157,245 @@ const NewCourse = () => {
   }, []);
 
   return (
-    <div className={styles.container}>
-      <form
-        id="newCourseForm"
-        onSubmit={handleNewCourse}
-        className={styles.borderless}
-      >
-        <div className={styles.formHeader}>
-          <h1>Novo Curso</h1>
-          <button className={styles.btn + " " + styles.large}>
+    <Container>
+      <form id="newCourseForm" onSubmit={handleNewCourse}>
+        <ContainerHeader>
+          <ContainerTitle>Novo Curso</ContainerTitle>
+          <Button variant="large" type="submit">
             Criar
-            <PlusIcon />
-          </button>
-        </div>
+            <Plus size={20} />
+          </Button>
+        </ContainerHeader>
 
-        <div className={styles.formTabs}>
+        <div className="flex gap-4 border-b-2 border-amber-300 pb-1 mb-8">
           <div
-            className={
-              styles.formTab + " " + (currentTab == 1 && styles.active)
-            }
+            className={`cursor-pointer p-2 rounded-lg font-bold text-sm text-amber-600/70 relative hover:bg-amber-100/80 ${
+              currentTab == 1 && "text-amber-500 bg-amber-100"
+            }`}
             onClick={() => {
               setError();
-              setCurrentTab(1)
+              setCurrentTab(1);
             }}
           >
             Informações básicas
           </div>
           <div
-            className={
-              styles.formTab + " " + (currentTab == 2 && styles.active)
-            }
+            className={`cursor-pointer p-2 rounded-lg font-bold text-sm text-amber-600/70 relative hover:bg-amber-100/80 ${
+              currentTab == 2 && "text-amber-500 bg-amber-100"
+            }`}
             onClick={() => {
               setError();
-              setCurrentTab(2)
+              setCurrentTab(2);
             }}
           >
             Módulos
           </div>
         </div>
 
-        {error && <div className={styles.error}>{error}</div>}
+        {error && (
+          <div className="bg-red-100 text-red-500 my-3 px-2 py-1 rounded-lg">
+            {error}
+          </div>
+        )}
 
-        <div className={currentTab != 1 ? styles.hidden : ""}>
-          <div className={styles.formSection} style={{position: 'relative',zIndex: 3}}>
-            <div className={styles.formColumn}>
-              <label>
-                Título
-                <input type="text" name="titulo" onChange={handleInput} />
-              </label>
-              <label>
-                Dificuldade:
-                <Select
-                  noOptionsMessage={() => "Não encontrado!"}
-                  name="dificuldade"
-                  options={dificultyOptions}
-                  theme={(theme) => ({
-                    ...theme,
-                    borderRadius: 8,
-                    colors: {
-                      ...theme.colors,
-                      primary: "#272727",
-                    },
-                  })}
-                  styles={selectStyles}
-                  onChange={(e) => {
-                    setError();
-                    setDificuldade(e)
-                  }}
-                />
-              </label>
-            </div>
+        <div className={`flex flex-col gap-4 ${currentTab != 1 && "hidden"}`}>
+          <div className="grid grid-cols-2 gap-2 relative z-10">
+            <FormLabel>
+              Título
+              <FormInput type="text" name="titulo" onChange={handleInput} />
+            </FormLabel>
 
-            <div className={styles.formColumn}>
-              <label>
-                Categorias:
-                <Select
-                  isMulti
-                  noOptionsMessage={() => "Não encontrado!"}
-                  name="categoria"
-                  options={categories}
-                  theme={(theme) => ({
-                    ...theme,
-                    borderRadius: 8,
-                    colors: {
-                      ...theme.colors,
-                      primary: "#272727",
-                    },
-                  })}
-                  styles={selectStyles}
-                  onChange={(e) => {
-                    setSelectedCategories([...e])
-                    setError();
-                  }}
-                />
-              </label>
-            </div>
+            <FormLabel>
+              Categorias:
+              <FormSelect
+                isMulti
+                name="categoria"
+                options={categories}
+                onChange={(e) => {
+                  setSelectedCategories([...e]);
+                  setError();
+                }}
+              />
+            </FormLabel>
+
+            <FormLabel>
+              Dificuldade:
+              <FormSelect
+                name="dificuldade"
+                options={dificultyOptions}
+                onChange={(e) => {
+                  setError();
+                  setDificuldade(e);
+                }}
+              />
+            </FormLabel>
           </div>
 
-          <div className={styles.formSection}>
-            <label>
+          <div>
+            <FormLabel>
               Descrição
-
               {/* <textarea
                 name="descricao"
                 onChange={handleInput}
                 cols="30"
                 rows="8"
               ></textarea> */}
-              
-              <DescEditor 
+              <DescEditor
                 initialValue={desc}
                 onChange={(newDesc) => {
-                  setDesc(newDesc)
+                  setDesc(newDesc);
                   setError();
                 }}
-                editor={editor} 
+                editor={editor}
               />
-              
-
-            </label>
+            </FormLabel>
           </div>
         </div>
 
-        <div className={currentTab != 2 ? styles.hidden : styles.moduleContainer}>
-          <div className={styles.moduleList}>
-            <button
-              type="button"
-              className={styles.btn}
+        <div className={currentTab != 2 ? "hidden" : "grid grid-cols-4 gap-16"}>
+          <div className="flex flex-col py-2 gap-4">
+            <Button
+              classes="self-center"
               onClick={() => {
-                setNewModule(true)
+                setNewModule(true);
                 setError();
               }}
             >
               Adicionar módulo
-              <PlusIcon />
-            </button>
+              <Plus size={16} />
+            </Button>
 
             {modulos?.length > 0 ? (
               modulos.map((modulo, index) => {
                 return (
                   <div
-                    className={
-                      (selectedModule === index)
-                        ? styles.selected + " " + styles.module
-                        : styles.module
-                    }
+                    className={`py-1 px-2 rounded-lg cursor-pointer text-ellipsis flex items-center gap-1 text-amber-500 font-bold
+                                transition hover:ring-2 hover:ring-amber-400
+                                ${
+                                  selectedModule === index && "bg-amber-200/60"
+                                }`}
                     key={index}
-                    
-                  >
-                    <div> ▥ </div>
-                    <span onClick={() => {
+                    onClick={() => {
                       setSelectedModule(index);
-                    }}>
+                    }}
+                  >
+                    <SquareLibrary size={18} />
+                    <span className="overflow-hidden text-nowrap text-ellipsis flex-1">
                       {modulo.titulo}
                     </span>
-                    <button type="button" className={styles.btnText}
+                    <Button
+                      variant="action"
                       onClick={() => {
                         setError();
                         setSelectedModule(-1);
 
                         let mods = modulos;
-                        mods = mods.filter(mod => {
-                          if(mod.index != index) {
-                            if(mod.index > index) {
+                        mods = mods.filter((mod) => {
+                          if (mod.index != index) {
+                            if (mod.index > index) {
                               mod.index--;
                             }
                             return true;
                           }
                           return false;
-                        })
+                        });
 
                         setModulos(mods);
 
                         let lcqs = listConQuizz;
                         lcqs = lcqs.filter((lcq, ind) => {
                           return ind != index;
-                        })
+                        });
 
                         setListConQuizz(lcqs);
-                      }}>
-                      <DeleteIcon />
-                    </button>
+                      }}
+                    >
+                      <Trash size={16} />
+                    </Button>
                   </div>
                 );
               })
             ) : (
-              <p>Nenhum módulo encontrado!</p>
+              <p className="text-center text-sm mt-6">
+                Nenhum módulo encontrado!
+              </p>
             )}
           </div>
 
-          <div className={styles.moduleContent}>
-            {modulos[selectedModule] ?
+          <div className="col-span-3 flex flex-col gap-4 p-2">
+            {modulos[selectedModule] ? (
               <>
-                <div className={styles.formHeader}>
-                  <h2>{modulos[selectedModule].titulo}</h2>
-                    
-                  <div className={styles.formHeaderSection}>
-                    <button type="button" className={styles.btnText}
+                <div className="flex items-center justify-between text-zinc-900">
+                  <h2 className="text-xl font-bold">
+                    {modulos[selectedModule].titulo}
+                  </h2>
+
+                  <div className="self-end flex items-center gap-2">
+                    <Button
+                      variant="action"
                       onClick={() => {
-                        setActionContent()
+                        setActionContent();
                         setOpenContent(true);
-                      }}>
+                      }}
+                    >
                       Adicionar conteúdo
-                      <PlusIcon color="#808080" />
-                    </button>
-                    <button type="button" className={styles.btnText}
+                      <Plus size={14} />
+                    </Button>
+                    <Button
+                      variant="action"
                       onClick={() => {
                         setOpenQuizz(true);
-                      }}>
+                      }}
+                    >
                       Adicionar quizz
-                      <PlusIcon color="#808080" />  
-                    </button>
+                      <Plus size={14} />
+                    </Button>
                   </div>
                 </div>
-                
-                {listConQuizz[selectedModule].map(cq => {
 
-                  if(cq.hasOwnProperty('material')) {
+                {listConQuizz[selectedModule].map((cq) => {
+                  if (cq.hasOwnProperty("material")) {
                     return (
-                      <div 
-                        className={styles.module} key={cq.index} 
+                      <div
+                        className={`py-2 px-8 rounded-lg cursor-pointer text-ellipsis flex items-center gap-2 text-zinc-800 font-bold
+                        transition hover:ring-2 hover:ring-amber-400`}
+                        key={cq.index}
                         onClick={() => {
                           setActionContent(cq);
                           setOpenContent(true);
-                      }}>
-                        Modulo:&nbsp;
-                        {cq.titulo}
-                        <div>
-                          {cq.index}
-                        </div>
+                        }}
+                      >
+                        <Text size={20} />
+                        <span className="overflow-hidden grow">
+                          {cq.titulo}
+                        </span>
+                        {/* <div>{cq.index}</div> */}
                       </div>
-                    )
+                    );
                   } else {
                     return (
-                      <div 
-                        className={styles.module} key={cq.index} 
+                      <div
+                        className={`py-2 px-8 rounded-lg cursor-pointer text-ellipsis flex items-center gap-2 text-zinc-800 font-bold
+                        transition hover:ring-2 hover:ring-amber-400`}
+                        key={cq.index}
                         onClick={() => {
                           setActionQuizz(cq);
                           setOpenQuizz(true);
-                      }}>
-                        Quizz:&nbsp;
-                        {cq.titulo}
-                        <div>
-                          {cq.index}
-                        </div>
+                        }}
+                      >
+                        <ListTodo size={20} />
+                        <span className="overflow-hidden grow">
+                          {cq.titulo}
+                        </span>
+                        {/* <div>{cq.index}</div> */}
                       </div>
-                    )
+                    );
                   }
                 })}
-
               </>
-              :
+            ) : (
               <p></p>
-            }
+            )}
           </div>
         </div>
       </form>
@@ -418,18 +405,15 @@ const NewCourse = () => {
           saveModule={(titulo) => {
             setModulos([
               ...modulos,
-              { 
-                titulo: titulo, 
+              {
+                titulo: titulo,
                 index: modulos.length,
                 conteudos: [],
-                quizzes: []
+                quizzes: [],
               },
             ]);
 
-            setListConQuizz([
-              ...listConQuizz,
-              []
-            ])
+            setListConQuizz([...listConQuizz, []]);
 
             setNewModule(false);
             setError();
@@ -439,7 +423,7 @@ const NewCourse = () => {
       )}
 
       {openContent && (
-        <ContentModal 
+        <ContentModal
           saveContent={(con) => {
             let mod = modulos;
             con.index = listConQuizz[selectedModule].length;
@@ -476,7 +460,7 @@ const NewCourse = () => {
       )}
 
       {openQuizz && (
-        <QuizzModal 
+        <QuizzModal
           saveQuizz={(qui) => {
             let mod = modulos;
             qui.index = listConQuizz[selectedModule].length;
@@ -515,8 +499,7 @@ const NewCourse = () => {
       {/* <div className={styles.log} onClick={() => console.log(modulos)}>
         logger 
       </div> */}
-      
-    </div>
+    </Container>
   );
 };
 

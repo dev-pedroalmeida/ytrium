@@ -1,10 +1,14 @@
-import React, { useState } from 'react'
-import styles from '../styles/styles.module.css';
+import React, { useState } from "react";
+import styles from "../styles/styles.module.css";
+import Overlay from "../components/Overlay";
+import FormTitle from "./form/FormTitle";
+import FormLabel from "./form/FormLabel";
+import FormInput from "./form/FormInput";
+import Button from "./Button";
 
-const NewModule = ( {saveModule, cancelar} ) => {
-
+const NewModule = ({ saveModule, cancelar }) => {
   const [module, setModule] = useState({
-    titulo: '',
+    titulo: "",
   });
 
   const [error, setError] = useState();
@@ -17,29 +21,41 @@ const NewModule = ( {saveModule, cancelar} ) => {
     e.preventDefault();
     setError();
 
-    if(module.titulo == '') {
-      setError('Insira um título')
+    if (module.titulo == "") {
+      setError("Insira um título");
     } else {
       saveModule(module.titulo);
     }
   }
 
   return (
-    <div className={styles.overlay}>
-      <form onSubmit={handleNewModule}>
-        <div className={styles.formTitle}>
-          Novo módulo
-        </div>
-        <label>
+    <Overlay onClick={() => cancelar()}>
+      <form
+        onSubmit={handleNewModule}
+        onClick={(e) => e.stopPropagation()}
+        className="flex flex-col gap-4 p-8 pt-12 bg-white rounded-lg shadow-lg min-w-[380px]"
+      >
+        <FormTitle>Novo módulo</FormTitle>
+        <FormLabel>
           Insira o título do módulo:
-          <input type="text" name="titulo" onChange={handleInput}  />
-        </label>
-        {error && <div className={styles.error}>{error}</div>}
-        <button className={styles.btn} type="submit">Salvar</button>
-        <button className={styles.btnSecondary} type="button" onClick={() => cancelar()}>Cancelar</button>
-      </form>
-    </div>
-  )
-}
+          <FormInput type="text" name="titulo" onChange={handleInput} />
+        </FormLabel>
 
-export default NewModule
+        {error && (
+          <div className="bg-red-100 text-red-500 px-2 py-1 rounded-lg">
+            {error}
+          </div>
+        )}
+
+        <div className="flex items-center gap-2 justify-end">
+          <Button variant="secondary" type="button" onClick={() => cancelar()}>
+            Cancelar
+          </Button>
+          <Button type="submit">Salvar</Button>
+        </div>
+      </form>
+    </Overlay>
+  );
+};
+
+export default NewModule;
