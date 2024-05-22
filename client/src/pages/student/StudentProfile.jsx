@@ -1,10 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
-import styles from "../../styles/styles.module.css";
 import { AuthContext } from "../../contexts/AuthContext.jsx";
-import { PDFDownloadLink, PDFViewer } from "@react-pdf/renderer";
+import { PDFDownloadLink } from "@react-pdf/renderer";
 import Certificate from "../../components/Certificate.jsx";
 import axios from "axios";
-import DownloadIcon from "../../assets/DownloadIcon.jsx";
 import Container from "../../components/Container.jsx";
 import Loading from "../../components/Loading.jsx";
 import ContainerHeader from "../../components/ContainerHeader.jsx";
@@ -19,8 +17,8 @@ const StudentProfile = () => {
   const [currentTab, setCurrentTab] = useState(1);
   const [loading, setLoading] = useState(true);
   const [courses, setCourses] = useState([]);
-  const [xpPerc] = useState((user.experiencia / 4000) * 100);
-  
+  const [xpPerc, setXpPerc] = useState(null);
+
   useEffect(() => {
     console.log(user);
     axios
@@ -30,13 +28,12 @@ const StudentProfile = () => {
       .then((res) => {
         // console.log(res);
         setCourses(res.data);
+        setLoading(false);
       })
       .catch((err) => {
-        console.error(err.response.data || "Oops");
+        console.error(err);
       });
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
+    setXpPerc((user?.experiencia / 4000) * 100);
   }, []);
 
   return (
@@ -50,24 +47,26 @@ const StudentProfile = () => {
               <div className="flex items-center gap-2 flex-1">
                 <div className="rounded-full w-14 h-14 bg-gradient-to-b from-amber-500 to-amber-400"></div>
                 <div>
-                  <h1 className="text-2xl font-bold">{user.nome}</h1>
-                  <h1 className="text-lg">{user.email}</h1>
+                  <h1 className="text-2xl font-bold">{user?.nome}</h1>
+                  <h1 className="text-lg">{user?.email}</h1>
                 </div>
               </div>
               <div>
                 <div className="flex justify-between items-center">
                   <div className="bg-amber-500 p-1 rounded-md text-amber-50 font-bold w-fit mb-1">
-                    Nível {user.nivel || 1}
+                    Nível {user?.nivel || 1}
                   </div>
                   <div className="font-bold text-center">
-                    {user.experiencia || 0} / {(user.nivel || 1) * 4000}
+                    {user?.experiencia || 0} / {(user?.nivel || 1) * 4000}
                   </div>
                 </div>
                 <div className="w-[500px] bg-amber-500/20 h-6 rounded-lg overflow-hidden">
-                  <div
-                    className={`bg-amber-500 h-6`}
-                    style={{ width: `${xpPerc}%` }}
-                  ></div>
+                  {xpPerc !== null && (
+                    <div
+                      className={`bg-amber-500 h-6`}
+                      style={{ width: `${xpPerc}%` }}
+                    />
+                  )}
                 </div>
               </div>
             </ContainerHeader>
@@ -88,7 +87,7 @@ const StudentProfile = () => {
             {currentTab == 1 && (
               <div className="mt-4">
                 <CoursesList>
-                  {courses.length > 0 ? (
+                  {courses?.length > 0 ? (
                     courses?.map((course) => {
                       return (
                         <CourseCard.Root key={course.cur_id}>
@@ -106,7 +105,7 @@ const StudentProfile = () => {
                             <PDFDownloadLink
                               document={
                                 <Certificate
-                                  nome={user.nome}
+                                  nome={user?.nome}
                                   curso={course.cur_titulo}
                                   instrutor={course.usu_nome}
                                 />
