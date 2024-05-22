@@ -15,12 +15,12 @@ const Button = ({
       type={type}
       className={`${classes} flex items-center gap-1 p-2 font-semibold rounded-md shadow transition disabled:cursor-not-allowed disabled:grayscale text-white 
                       ${
-                        variant === "default" &&
+                        (variant === "default" || variant.trim() == "") &&
                         "bg-amber-500 hover:bg-amber-500/70"
                       }
                       ${
                         variant === "large" &&
-                        " text-lg font-bold bg-gradient-to-tr from-amber-500 to-amber-400 hover:from-amber-400 hover:to-amber-500"
+                        " text-lg p-4 font-bold bg-gradient-to-tr from-amber-500 to-amber-400 hover:from-amber-400 hover:to-amber-500"
                       }
                       ${
                         variant === "small" &&

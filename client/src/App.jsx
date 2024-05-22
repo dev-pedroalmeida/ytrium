@@ -52,7 +52,7 @@ function App() {
       </div>
       <div className="min-h-[107vh] flex flex-col">
         <div className="flex-1">
-          {user?.tipo && <Navbar userType={user?.tipo} />}
+          {(user?.tipo && pathname.split("/")[1] !== "landing") && <Navbar userType={user?.tipo} />}
 
           <Outlet />
         </div>
