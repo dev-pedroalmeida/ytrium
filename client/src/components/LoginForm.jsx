@@ -11,7 +11,7 @@ import Button from "./Button";
 import Overlay from "./Overlay";
 
 const LoginForm = ({ closeForm }) => {
-  const { setUser } = useContext(AuthContext);
+  const { setUser, setIsAuth } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const [loginValues, setLoginValues] = useState({
@@ -45,6 +45,7 @@ const LoginForm = ({ closeForm }) => {
           console.log(res.data);
           if (res.status == 200) {
             setUser(res.data);
+            setIsAuth(true)
             navigate("/");
           }
         });
@@ -92,7 +93,7 @@ const LoginForm = ({ closeForm }) => {
         </FormLabel>
 
         <div className="flex items-center gap-1 justify-end">
-          <Button variant="secondary" onClick={() => closeForm()}>
+          <Button variant="text" onClick={() => closeForm()}>
             Cancelar
           </Button>
           <Button type="submit">

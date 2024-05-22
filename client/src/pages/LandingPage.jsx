@@ -32,9 +32,9 @@ const LandingPage = () => {
       )}
 
       <div className="relative">
-        <div className="max-h-[1100px] min-h-[800px] w-screen absolute top-0 right-0 -z-10 overflow-hidden">
-          <div className="w-[700px] h-[700px] bg-amber-400/70 blur-[100px] rounded-full absolute -top-80 right-0 box-border"></div>
-          <div className="w-[800px] h-[800px] bg-orange-400/60 blur-[100px] rounded-full absolute -top-48 right-[500px]"></div>
+        <div className="max-h-[1100px] min-h-[800px] w-screen absolute top-0 right-0 -z-10 overflow-hidden bg-amber-50">
+          <div className="w-[700px] h-[700px] bg-amber-400/60 blur-[100px] rounded-full absolute -top-96 right-0 box-border"></div>
+          <div className="w-[800px] h-[800px] bg-orange-400/60 blur-[100px] rounded-full absolute -top-56 right-[500px]"></div>
         </div>
         <Navbar
           userType={undefined}

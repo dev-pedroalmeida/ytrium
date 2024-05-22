@@ -19,15 +19,20 @@ const StudentProfile = () => {
   const [currentTab, setCurrentTab] = useState(1);
   const [loading, setLoading] = useState(true);
   const [courses, setCourses] = useState([]);
-
+  const [xpPerc] = useState((user.experiencia / 4000) * 100);
+  
   useEffect(() => {
+    console.log(user);
     axios
       .get("http://localhost:3000/student/completedCourses", {
         withCredentials: true,
       })
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         setCourses(res.data);
+      })
+      .catch((err) => {
+        console.error(err.response.data || "Oops");
       });
     setTimeout(() => {
       setLoading(false);
@@ -42,11 +47,27 @@ const StudentProfile = () => {
         ) : (
           <>
             <ContainerHeader>
-              <div className="flex items-center gap-2 justify-center flex-1">
+              <div className="flex items-center gap-2 flex-1">
                 <div className="rounded-full w-14 h-14 bg-gradient-to-b from-amber-500 to-amber-400"></div>
                 <div>
                   <h1 className="text-2xl font-bold">{user.nome}</h1>
                   <h1 className="text-lg">{user.email}</h1>
+                </div>
+              </div>
+              <div>
+                <div className="flex justify-between items-center">
+                  <div className="bg-amber-500 p-1 rounded-md text-amber-50 font-bold w-fit mb-1">
+                    Nível {user.nivel || 1}
+                  </div>
+                  <div className="font-bold text-center">
+                    {user.experiencia || 0} / {(user.nivel || 1) * 4000}
+                  </div>
+                </div>
+                <div className="w-[500px] bg-amber-500/20 h-6 rounded-lg overflow-hidden">
+                  <div
+                    className={`bg-amber-500 h-6`}
+                    style={{ width: `${xpPerc}%` }}
+                  ></div>
                 </div>
               </div>
             </ContainerHeader>
@@ -65,55 +86,53 @@ const StudentProfile = () => {
             </div>
 
             {currentTab == 1 && (
-              <>
-                <div className="mt-4">
-                  <CoursesList>
-                    {courses.length > 0 ? (
-                      courses?.map((course) => {
-                        return (
-                          <CourseCard.Root key={course.cur_id}>
-                            <CourseCard.Title>
-                              {course.cur_titulo}
-                            </CourseCard.Title>
-                            <CourseCard.Content>
-                              <div className="flex items-center gap-2 text-lg mb-4">
-                                <div className="rounded-full w-8 h-8 bg-gradient-to-b from-amber-500 to-amber-400"></div>
-                                {course.usu_nome}
-                              </div>
-                            </CourseCard.Content>
+              <div className="mt-4">
+                <CoursesList>
+                  {courses.length > 0 ? (
+                    courses?.map((course) => {
+                      return (
+                        <CourseCard.Root key={course.cur_id}>
+                          <CourseCard.Title>
+                            {course.cur_titulo}
+                          </CourseCard.Title>
+                          <CourseCard.Content>
+                            <div className="flex items-center gap-2 text-lg mb-4">
+                              <div className="rounded-full w-8 h-8 bg-gradient-to-b from-amber-500 to-amber-400"></div>
+                              {course.usu_nome}
+                            </div>
+                          </CourseCard.Content>
 
-                            <CourseCard.Footer>
-                              <PDFDownloadLink
-                                document={
-                                  <Certificate
-                                    nome={user.nome}
-                                    curso={course.cur_titulo}
-                                    instrutor={course.usu_nome}
-                                  />
-                                }
-                                fileName="certificado.pdf"
-                              >
-                                {({ blob, url, loading, error }) =>
-                                  loading ? (
-                                    "Carregando..."
-                                  ) : (
-                                    <Button>
-                                      Certificado
-                                      <Download size={18} />
-                                    </Button>
-                                  )
-                                }
-                              </PDFDownloadLink>
-                            </CourseCard.Footer>
-                          </CourseCard.Root>
-                        );
-                      })
-                    ) : (
-                      <p>Nenhum curso completo!</p>
-                    )}
-                  </CoursesList>
-                </div>
-              </>
+                          <CourseCard.Footer>
+                            <PDFDownloadLink
+                              document={
+                                <Certificate
+                                  nome={user.nome}
+                                  curso={course.cur_titulo}
+                                  instrutor={course.usu_nome}
+                                />
+                              }
+                              fileName="certificado.pdf"
+                            >
+                              {({ blob, url, loading, error }) =>
+                                loading ? (
+                                  "Carregando..."
+                                ) : (
+                                  <Button>
+                                    Certificado
+                                    <Download size={18} />
+                                  </Button>
+                                )
+                              }
+                            </PDFDownloadLink>
+                          </CourseCard.Footer>
+                        </CourseCard.Root>
+                      );
+                    })
+                  ) : (
+                    <p>Nenhum curso completo!</p>
+                  )}
+                </CoursesList>
+              </div>
             )}
           </>
         )}

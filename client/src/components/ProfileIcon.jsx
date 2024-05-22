@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 const ProfileIcon = () => {
 
   const [open, setOpen] = useState(false);
-  const { user, setUser} = useContext(AuthContext);
+  const { user, setUser, setIsAuth} = useContext(AuthContext);
 
   const navigate = useNavigate();
 
@@ -26,6 +26,7 @@ const ProfileIcon = () => {
     })
     .then(res => {
       setUser({});
+      setIsAuth(false)
       navigate('/landing');
     })
   }

@@ -56,7 +56,7 @@ const DescEditor = ({
           </Toolbar>
         )}
 
-        <div className="text-zinc-700 bg-white px-4 py-8 rounded-lg shadow text-base border-none outline-transparent mb-16 text-balance *:outline-none">
+        <div className="text-zinc-700 px-4 py-8 rounded-lg text-base border-none outline-transparent mb-16 text-balance *:outline-none">
           <Editable
             renderElement={renderElement}
             renderLeaf={renderLeaf}

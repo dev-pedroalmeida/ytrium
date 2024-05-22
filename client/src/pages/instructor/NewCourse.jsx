@@ -1,13 +1,9 @@
 import React, { useEffect, useMemo, useState } from "react";
-import styles from "../../styles/styles.module.css";
-import PlusIcon from "../../assets/PlusIcon";
 import axios from "axios";
 import NewModule from "../../components/NewModule";
 import { useNavigate } from "react-router-dom";
-import Select from "react-select";
 import ContentModal from "../../components/ContentModal";
 import QuizzModal from "../../components/QuizzModal";
-import DeleteIcon from "../../assets/DeleteIcon";
 import DescEditor from "../../components/DescEditor";
 import { withHistory } from "slate-history";
 import { withReact } from "slate-react";
@@ -231,7 +227,7 @@ const NewCourse = () => {
             </FormLabel>
           </div>
 
-          <div>
+          <div className="max-w-[60%]">
             <FormLabel>
               Descrição
               {/* <textarea
@@ -240,14 +236,16 @@ const NewCourse = () => {
                 cols="30"
                 rows="8"
               ></textarea> */}
-              <DescEditor
-                initialValue={desc}
-                onChange={(newDesc) => {
-                  setDesc(newDesc);
-                  setError();
-                }}
-                editor={editor}
-              />
+              <div className="bg-white rounded shadow">
+                <DescEditor
+                  initialValue={desc}
+                  onChange={(newDesc) => {
+                    setDesc(newDesc);
+                    setError();
+                  }}
+                  editor={editor}
+                />
+              </div>
             </FormLabel>
           </div>
         </div>

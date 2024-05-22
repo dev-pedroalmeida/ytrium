@@ -13,7 +13,7 @@ const Button = ({
       disabled={disabled}
       onClick={onClick}
       type={type}
-      className={`${classes} flex items-center gap-1 p-2 font-medium rounded-md shadow transition disabled:cursor-not-allowed disabled:grayscale text-white 
+      className={`${classes} flex items-center gap-1 p-2 font-semibold rounded-md shadow transition disabled:cursor-not-allowed disabled:grayscale text-white 
                       ${
                         variant === "default" &&
                         "bg-amber-500 hover:bg-amber-500/70"
@@ -28,11 +28,11 @@ const Button = ({
                       }
                       ${
                         variant === "secondary" &&
-                        "text-zinc-800/90 bg-orange-300/60 hover:bg-orange-200/50"
+                        "text-zinc-900/85 bg-amber-500/35 transition hover:bg-amber-500/50"
                       }
                       ${
                         variant === "text" &&
-                        "text-zinc-900 bg-transparent hover:bg-transparent hover:text-zinc-900/70 shadow-none"
+                        "text-zinc-900 bg-transparent hover:bg-transparent hover:underline hover:text-zinc-900/90 shadow-none"
                       }
                       ${
                         variant === "action" &&

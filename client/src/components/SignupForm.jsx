@@ -94,7 +94,7 @@ const SignupForm = ( {userType = 'estudante', closeForm, login} ) => {
         </FormLabel>
 
         <div className="flex items-center gap-2 justify-end">
-          <Button variant="secondary" onClick={() => closeForm()}>Cancelar</Button>
+          <Button variant="text" onClick={() => closeForm()}>Cancelar</Button>
           <Button type='submit'>Cadastrar</Button>
         </div>
       </form>

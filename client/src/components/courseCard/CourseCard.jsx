@@ -1,5 +1,5 @@
 import React from "react";
-import { Sparkle } from "lucide-react";
+import { Sparkle, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const Root = ({ children }) => {
@@ -16,7 +16,7 @@ const Title = ({ children, completo = false }) => {
   return (
     <div className="flex flex-col">
       <div className="flex items-center gap-2">
-        <Sparkle color="#F59E0B" />
+        <Sparkles color="#F59E0B" fill="#F59E0B" />
         <div className="bg-amber-500 h-0.5 flex-1"></div>
         {completo && (
           <div className="py-0.5 px-1 text-sm font-medium tracking-tight rounded-lg bg-amber-500 text-white">
