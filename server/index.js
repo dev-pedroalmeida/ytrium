@@ -115,7 +115,10 @@ app.post('/login', (req, res) => {
 
     const user = usrType();
 
-    const token = jwt.sign(user, 'jkey');
+    const token = jwt.sign({
+      id: user.id,
+      tipo: user.tipo,
+    }, 'jkey');
 
     res.cookie('token', token);
 

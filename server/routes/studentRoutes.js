@@ -1,92 +1,97 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const db = require('../db')
-const jwt = require('jsonwebtoken');
+const db = require("../db");
+const jwt = require("jsonwebtoken");
 
 function isAuthenticated(req, res, next) {
   const token = req.cookies.token;
-  if(!token) return res.status(400).json('Token inválido!');
+  if (!token) return res.status(400).json("Token inválido!");
 
-  const decoded = jwt.verify(token, 'jkey');
+  const decoded = jwt.verify(token, "jkey");
 
-  if(decoded.tipo !== 'estudante') return res.status(401).json('Acesso restrito!');
+  if (decoded.tipo !== "estudante")
+    return res.status(401).json("Acesso restrito!");
 
   next();
 }
 
 router.post("/subscribe", isAuthenticated, (req, res) => {
-  const { id } = jwt.verify(req.cookies.token, 'jkey');
+  const { id } = jwt.verify(req.cookies.token, "jkey");
 
   const curso = req.body.curso;
 
-  const qCheckSubbed = "select count(*) as cad from alc_aluno_curso where alc_alunoId = ? and alc_cursoId = ?";
+  const qCheckSubbed =
+    "select count(*) as cad from alc_aluno_curso where alc_alunoId = ? and alc_cursoId = ?";
 
   db.query(qCheckSubbed, [id, curso.cur_id], (errQc, result) => {
-    if(errQc) {
+    if (errQc) {
       res.status(400).json(errQc);
     } else {
-      if(result[0].cad >= 1) {
+      if (result[0].cad >= 1) {
         res.status(401).json("Já inscrito!");
       } else {
-
-        const q = "INSERT INTO alc_aluno_curso (`alc_alunoId`, `alc_cursoId`, `alc_status`) VALUES (?)";
+        const q =
+          "INSERT INTO alc_aluno_curso (`alc_alunoId`, `alc_cursoId`, `alc_status`) VALUES (?)";
 
         db.query(q, [[id, curso.cur_id, false]], (err, result) => {
-          if(err) {
+          if (err) {
             res.status(400).json(err);
           } else {
-
-            const upQ = "UPDATE cur_curso SET cur_qtdInscritos = cur_qtdInscritos + 1 WHERE cur_id = ?";
+            const upQ =
+              "UPDATE cur_curso SET cur_qtdInscritos = cur_qtdInscritos + 1 WHERE cur_id = ?";
             db.query(upQ, [curso.cur_id], (errU) => {
-              if(errU) {
+              if (errU) {
                 res.status(400).json(errU);
               }
-            })
+            });
 
-            const q2 = "INSERT INTO alm_aluno_modulo (`alm_alunoId`, `alm_moduloId`, `alm_completo`) VALUES (?)";
-        
+            const q2 =
+              "INSERT INTO alm_aluno_modulo (`alm_alunoId`, `alm_moduloId`, `alm_completo`) VALUES (?)";
+
             curso.modulos.forEach((mod, index) => {
               db.query(q2, [[id, mod.id, false]], (err2, result2) => {
-                if(err2) {
+                if (err2) {
                   res.status(400).json(err2);
                 } else {
-        
-                  const q3 = "INSERT INTO aco_aluno_conteudo (`aco_alunoId`, `aco_conteudoId`, `aco_completo`) VALUES (?)";
-        
-                  curso.modulos[index].conteudos.forEach(con => {
+                  const q3 =
+                    "INSERT INTO aco_aluno_conteudo (`aco_alunoId`, `aco_conteudoId`, `aco_completo`) VALUES (?)";
+
+                  curso.modulos[index].conteudos.forEach((con) => {
                     db.query(q3, [[id, con.id, false]], (err3, result3) => {
-                      if(err3) {
+                      if (err3) {
                         res.status(400).json(err3);
                       }
-                    })
-                  })
-                  
-                  if(curso.modulos[index].quizzes && curso.modulos[index].quizzes.length > 0) {
-                    const q4 = "INSERT INTO alq_aluno_quizz (`alq_alunoId`, `alq_quizzId`, `alq_completo`) VALUES (?)";
-  
-                    curso.modulos[index].quizzes.forEach(qui => {
+                    });
+                  });
+
+                  if (
+                    curso.modulos[index].quizzes &&
+                    curso.modulos[index].quizzes.length > 0
+                  ) {
+                    const q4 =
+                      "INSERT INTO alq_aluno_quizz (`alq_alunoId`, `alq_quizzId`, `alq_completo`) VALUES (?)";
+
+                    curso.modulos[index].quizzes.forEach((qui) => {
                       db.query(q4, [[id, qui.id, false]], (err4, result4) => {
-                        if(err4) {
+                        if (err4) {
                           res.status(400).json(err4);
                         }
-                      })
-                    })
+                      });
+                    });
                   }
                   res.end();
                 }
-              })
+              });
             });
           }
-        })
-
+        });
       }
     }
-  })
-
-})
+  });
+});
 
 router.get("/subscriptions", isAuthenticated, (req, res) => {
-  const {id} = jwt.verify(req.cookies.token, 'jkey');
+  const { id } = jwt.verify(req.cookies.token, "jkey");
 
   const q = `select c.cur_id, c.cur_titulo, c.cur_status, c.cur_qtdInscritos, c.cur_dificuldade, c.cur_qtdExperiencia, u.usu_nome, al.alc_status, modulos.quantidade, modulos.completos
               from cur_curso c
@@ -102,24 +107,22 @@ router.get("/subscriptions", isAuthenticated, (req, res) => {
               where c.cur_status = 'publico';`;
 
   db.query(q, (err, result) => {
-    if(err) {
+    if (err) {
       res.status(400).json(err);
     }
 
-    if(result.length < 1) {
+    if (result.length < 1) {
       return res.status(404).json("Nenhum curso encontrado!");
     }
 
     let cursos = result;
 
     return res.json(cursos);
-  })
-  
-})
+  });
+});
 
 router.get("/subscribed/:courseId", isAuthenticated, (req, res) => {
-
-  const {id} = jwt.verify(req.cookies.token, 'jkey');
+  const { id } = jwt.verify(req.cookies.token, "jkey");
 
   const q = `select c.cur_id, c.cur_titulo, c.cur_descricao, c.cur_status, c.cur_qtdInscritos, c.cur_dificuldade, c.cur_qtdExperiencia, u.usu_nome, al.alc_status,
   mod_cat.categorias as categorias,
@@ -170,87 +173,111 @@ router.get("/subscribed/:courseId", isAuthenticated, (req, res) => {
   where c.cur_status = 'publico' and c.cur_id = ? limit 1;`;
 
   db.query(q, [req.params.courseId], (err, result) => {
-    if(err) {
+    if (err) {
       res.status(400).json(err);
     }
 
-    if(result.length < 1) {
+    if (result.length < 1) {
       return res.status(404).json("Curso não encontrado!");
     }
 
     let curso = result[0];
     curso.categorias = JSON.parse(curso.categorias);
     curso.modulos = JSON.parse(curso.modulos);
-    curso.modulos = curso.modulos.sort((a,b) => a.index - b.index);
+    curso.modulos = curso.modulos.sort((a, b) => a.index - b.index);
 
     return res.json(curso);
-  })
-
-})
-
+  });
+});
 
 router.put("/completeContent", isAuthenticated, (req, res) => {
-  const { id } = jwt.verify(req.cookies.token, 'jkey');
+  const { id } = jwt.verify(req.cookies.token, "jkey");
 
-  const q = `UPDATE aco_aluno_conteudo SET aco_completo = ${true} WHERE aco_alunoId = ${id} and aco_conteudoId = ${req.body.conteudoId}`;
+  const q = `UPDATE aco_aluno_conteudo SET aco_completo = ${true} WHERE aco_alunoId = ${id} and aco_conteudoId = ${
+    req.body.conteudoId
+  }`;
 
   db.query(q, (err, result) => {
-    if(err) {
+    if (err) {
       return res.status(400).json(err);
     } else {
       return res.json(result);
     }
-  })
-
-})
+  });
+});
 
 router.put("/completeQuizz", isAuthenticated, (req, res) => {
-  const { id } = jwt.verify(req.cookies.token, 'jkey');
+  const { id } = jwt.verify(req.cookies.token, "jkey");
 
-  const q = `UPDATE alq_aluno_quizz SET alq_completo = ${true}, alq_porcentagemAcertos = ${req.body.porAcertos} WHERE alq_alunoId = ${id} and alq_quizzId = ${req.body.quizzId}`;
+  const q = `UPDATE alq_aluno_quizz SET alq_completo = ${true}, alq_porcentagemAcertos = ${
+    req.body.porAcertos
+  } WHERE alq_alunoId = ${id} and alq_quizzId = ${req.body.quizzId}`;
 
   db.query(q, (err, result) => {
-    if(err) {
+    if (err) {
       return res.status(400).json(err);
     } else {
       return res.json(result);
     }
-  })
-
-})
+  });
+});
 
 router.put("/completeModule", isAuthenticated, (req, res) => {
-  const { id } = jwt.verify(req.cookies.token, 'jkey');
+  const { id } = jwt.verify(req.cookies.token, "jkey");
 
-  const q = `UPDATE alm_aluno_modulo SET alm_completo = ${true} WHERE alm_alunoId = ${id} and alm_moduloId = ${req.body.moduloId}`;
+  const q = `UPDATE alm_aluno_modulo SET alm_completo = ${true} WHERE alm_alunoId = ${id} and alm_moduloId = ${
+    req.body.moduloId
+  }`;
 
   db.query(q, (err, result) => {
-    if(err) {
+    if (err) {
       return res.status(400).json(err);
     } else {
       return res.json(result);
     }
-  })
-
-})
+  });
+});
 
 router.put("/completeCourse", isAuthenticated, (req, res) => {
-  const { id } = jwt.verify(req.cookies.token, 'jkey');
+  const user = jwt.verify(req.cookies.token, "jkey");
 
-  const q = `UPDATE alc_aluno_curso SET alc_status = ${true} WHERE alc_alunoId = ${id} and alc_cursoId = ${req.body.cursoId}`;
+  const q = `UPDATE alc_aluno_curso SET alc_status = ${true} WHERE alc_alunoId = ${user.id} and alc_cursoId = ${req.body.cursoId}`;
 
   db.query(q, (err, result) => {
-    if(err) {
+    if (err) {
       return res.status(400).json(err);
     } else {
-      return res.json(result);
-    }
-  })
+      let newXp = req.body.userXp + req.body.cursoXp;
+      let newLevel = req.body.userNivel || 1;
 
-})
+      if (newXp >= req.body.userNivel * 4000) {
+        newXp = newXp - req.body.userNivel * 4000;
+        newLevel++;
+      }
+
+      db.query(
+        `UPDATE usu_usuario SET usu_experiencia = ${newXp}, usu_nivel = ${newLevel} WHERE usu_id = ${user.id}`,
+        (err2, result2) => {
+          if (err2) {
+            return res.status(400).json(err2);
+          } else {
+            user.experiencia = newXp;
+            user.nivel = newLevel;
+
+            return res.json({
+              result,
+              userNivel: newLevel,
+              userXp: newXp,
+            });
+          }
+        }
+      );
+    }
+  });
+});
 
 router.get("/completedCourses", isAuthenticated, (req, res) => {
-  const {id} = jwt.verify(req.cookies.token, 'jkey');
+  const { id } = jwt.verify(req.cookies.token, "jkey");
 
   const q = `select c.cur_id, c.cur_titulo, c.cur_status, c.cur_dificuldade, c.cur_qtdExperiencia, u.usu_nome, al.alc_status
               from cur_curso c
@@ -259,19 +286,18 @@ router.get("/completedCourses", isAuthenticated, (req, res) => {
               where c.cur_status = 'publico' and al.alc_status = 1;`;
 
   db.query(q, (err, result) => {
-    if(err) {
+    if (err) {
       res.status(400).json(err);
     }
 
-    if(result.length < 1) {
+    if (result.length < 1) {
       return res.status(404).json("Nenhum curso encontrado!");
     }
 
     let cursos = result;
 
     return res.json(cursos);
-  })
-  
-})
+  });
+});
 
 module.exports = router;
