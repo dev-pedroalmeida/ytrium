@@ -22,7 +22,7 @@ import Button from "../components/Button";
 import Overlay from "../components/Overlay";
 
 const CourseSubscribed = () => {
-  const { user } = useContext(AuthContext);
+  const { user, setUser } = useContext(AuthContext);
 
   const { courseId } = useParams();
 
@@ -190,12 +190,24 @@ const CourseSubscribed = () => {
     axios
       .put(
         `http://localhost:3000/student/completeCourse`,
-        { cursoId: cursoId },
+        { 
+          cursoId: cursoId,
+          cursoXp: course.cur_qtdExperiencia,
+          userNivel: user.nivel || 1,
+          userXp: user.experiencia || 0,
+        },
         {
           withCredentials: true,
         }
       )
       .then((res) => {
+        console.log(res)
+        setUser({
+          ...user,
+          nivel: res.data.userNivel,
+          experiencia: res.data.userXp,
+        })
+
         let newCourse = course;
         newCourse.completo = 1;
         setCourse(newCourse);

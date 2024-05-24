@@ -42,7 +42,7 @@ function App() {
           }
         });
     }
-  }, [user]);
+  }, [isAuth]);
 
   return (
     <AuthContext.Provider value={{ user, setUser, isAuth, setIsAuth }}>

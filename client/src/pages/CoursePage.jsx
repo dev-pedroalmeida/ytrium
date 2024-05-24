@@ -86,11 +86,9 @@ const CoursePage = () => {
             <div className="flex flex-col gap-2 items-end pl-20">
               {user?.tipo == "estudante" &&
                 (course.alc_status == null ? (
-                  <Button variant="large" onClick={() => subscribe()}>Inscreva-se</Button>
+                  <Button onClick={() => subscribe()}>Inscreva-se</Button>
                 ) : (
-                  <Button variant="large"
-                    onClick={() => navigate(`/course/subscribed/${courseId}`)}
-                  >
+                  <Button onClick={() => navigate(`/course/subscribed/${courseId}`)}>
                     Continuar
                   </Button>
                 ))}

@@ -32,8 +32,9 @@ const StudentProfile = () => {
       })
       .catch((err) => {
         console.error(err);
+        setLoading(false);
       });
-    setXpPerc((user?.experiencia / 4000) * 100);
+    setXpPerc(((user?.experiencia || 0) / ((user?.nivel || 1) * 4000)) * 100);
   }, []);
 
   return (
@@ -53,7 +54,7 @@ const StudentProfile = () => {
               </div>
               <div>
                 <div className="flex justify-between items-center">
-                  <div className="bg-amber-500 p-1 rounded-md text-amber-50 font-bold w-fit mb-1">
+                  <div className="bg-amber-500 p-1 rounded-md text-amber-50 font-bold text-lg w-fit mb-1">
                     Nível {user?.nivel || 1}
                   </div>
                   <div className="font-bold text-center">
@@ -71,7 +72,7 @@ const StudentProfile = () => {
               </div>
             </ContainerHeader>
 
-            <div className="flex gap-4 border-b-2 border-amber-300 pb-1">
+            <div className="flex gap-4 border-b-2 border-amber-300 pb-1 mt-12">
               <div
                 className={`cursor-pointer p-2 rounded-lg font-bold text-sm text-amber-600/70 relative ${
                   currentTab == 1 && "text-amber-500 bg-amber-100"

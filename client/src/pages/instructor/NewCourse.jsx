@@ -157,7 +157,7 @@ const NewCourse = () => {
       <form id="newCourseForm" onSubmit={handleNewCourse}>
         <ContainerHeader>
           <ContainerTitle>Novo Curso</ContainerTitle>
-          <Button variant="large" type="submit">
+          <Button type="submit">
             Criar
             <Plus size={20} />
           </Button>
