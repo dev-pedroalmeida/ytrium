@@ -7,7 +7,7 @@ import DescEditor from "../components/DescEditor";
 import Container from "../components/Container";
 import CourseCard from "../components/courseCard/CourseCard";
 import Button from "../components/Button";
-import { Loader2, SquareLibrary } from "lucide-react";
+import { Loader2, SquareLibrary, UserRound } from "lucide-react";
 import Loading from "../components/Loading.jsx";
 
 const CoursePage = () => {
@@ -60,7 +60,9 @@ const CoursePage = () => {
               <div className="flex flex-col gap-4">
                 <h1 className="text-4xl font-bold">{course.cur_titulo}</h1>
                 <div className="text-lg font-medium flex items-center gap-2">
-                  <div className="rounded-full w-8 h-8 bg-gradient-to-b from-amber-500 to-amber-400"></div>
+                  <div className="rounded-full w-8 h-8 bg-gradient-to-b from-amber-500 to-amber-400 flex items-center justify-center">
+                    <UserRound size={24} color="white" />
+                  </div>
                   {course.usu_nome}
                 </div>
               </div>
