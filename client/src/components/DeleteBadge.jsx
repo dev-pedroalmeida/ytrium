@@ -4,15 +4,15 @@ import Overlay from "./Overlay";
 import FormTitle from "./form/FormTitle";
 import Button from "./Button";
 
-const DeleteCategory = ({ category, success, cancelar }) => {
+const DeleteBadge = ({ badge, success, cancelar }) => {
   const [error, setError] = useState();
 
-  function handleDeleteCategory(e) {
+  function handleDeleteBadge(e) {
     e.preventDefault();
     setError();
 
     axios
-      .delete(`http://localhost:3000/admin/deleteCategory/${category.id}`, {
+      .delete(`http://localhost:3000/admin/deleteBadge/${badge.id}`, {
         withCredentials: true,
       })
       .catch((err) => {
@@ -32,14 +32,14 @@ const DeleteCategory = ({ category, success, cancelar }) => {
   return (
     <Overlay onClick={() => cancelar()}>
       <form
-        onSubmit={handleDeleteCategory}
+        onSubmit={handleDeleteBadge}
         onClick={(e) => e.stopPropagation()}
         className="flex flex-col gap-6 mb-56 p-8 bg-white rounded-lg shadow-lg min-w-[350px]"
       >
-        <FormTitle>Excluir categoria</FormTitle>
+        <FormTitle>Excluir insígnia</FormTitle>
         <label>
-          Deseja excluir a categoria{" "}
-          <span className="font-bold">{category.desc}</span>?
+          Deseja excluir a insígnia{" "}
+          <span className="font-bold">{badge.titulo}</span>?
         </label>
 
         {error && (
@@ -59,4 +59,4 @@ const DeleteCategory = ({ category, success, cancelar }) => {
   );
 };
 
-export default DeleteCategory;
+export default DeleteBadge;

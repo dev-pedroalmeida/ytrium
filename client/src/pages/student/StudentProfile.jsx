@@ -9,7 +9,7 @@ import ContainerHeader from "../../components/ContainerHeader.jsx";
 import CoursesList from "../../components/courseCard/CoursesList.jsx";
 import CourseCard from "../../components/courseCard/CourseCard.jsx";
 import Button from "../../components/Button.jsx";
-import { Download } from "lucide-react";
+import { Download, UserRound } from "lucide-react";
 
 const StudentProfile = () => {
   const { user } = useContext(AuthContext);
@@ -46,7 +46,9 @@ const StudentProfile = () => {
           <>
             <ContainerHeader>
               <div className="flex items-center gap-2 flex-1">
-                <div className="rounded-full w-14 h-14 bg-gradient-to-b from-amber-500 to-amber-400"></div>
+                <div className="rounded-full w-14 h-14 bg-gradient-to-b from-amber-500 to-amber-400 flex items-center justify-center">
+                  <UserRound size={40} color="white" />
+                </div>
                 <div>
                   <h1 className="text-2xl font-bold">{user?.nome}</h1>
                   <h1 className="text-lg">{user?.email}</h1>

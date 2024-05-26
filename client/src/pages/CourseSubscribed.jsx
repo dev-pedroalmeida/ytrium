@@ -237,7 +237,7 @@ const CourseSubscribed = () => {
       {
         courseCompleted &&
         <Overlay onClick={() => setCourseCompleted(false)}>
-          <div className="p-6 shadow-lg rounded-lg bg-white flex flex-col gap-4 w-[45ch] text-center">
+          <div className="p-6 shadow-lg rounded-lg bg-white flex flex-col gap-2 w-[45ch] text-center">
             <div className="flex items-center gap-2">
               <Sparkle color="#F59E0B" />
               <div className="bg-amber-500 h-0.5 flex-1"></div>
@@ -253,7 +253,7 @@ const CourseSubscribed = () => {
             <div className="text-lg font-medium">
               Você completo o curso {course?.cur_titulo}
             </div>
-            <div className="flex justify-end items-center gap-8 mt-8">
+            <div className="flex justify-end items-center gap-4 mt-4">
               <Button variant="text"
                 onClick={() => setCourseCompleted(false)}
               >
