@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db')
 const jwt = require('jsonwebtoken');
+const multer = require('multer')
+const upload = multer({dest: 'public/badges'})
 
 function isAuthenticated(req, res, next) {
   const token = req.cookies.token;
@@ -85,6 +87,72 @@ router.delete("/deleteCategory/:id", isAuthenticated, (req, res) => {
   const id = req.params.id;
 
   const q = `DELETE FROM cat_categoria WHERE cat_id = ${id}`;
+  db.query(q, (err, result) => {
+    if(err) {
+      return res.status(400).json(err);
+    }
+    return res.json(result);
+
+  })
+})
+
+
+
+router.get("/badges", isAuthenticated, (req, res) => {
+
+  const q = "SELECT * FROM ins_insignia";
+  db.query(q, (err, result) => {
+    if(err) {
+      return res.status(400).json(err);
+    }
+    return res.json(result);
+
+  })
+})
+
+router.post("/createBadge", upload.single('ins_icone'), isAuthenticated, (req, res) => {
+  
+  const badge = [
+    req.body.ins_titulo,
+    req.body.ins_qtdCursos,
+    req.file.filename,
+  ]
+
+  const q = "INSERT INTO ins_insignia (ins_titulo, ins_qtdCursos, ins_icone) VALUES (?)";
+  db.query(q, [badge], (err, result) => {
+    if(err){
+      return res.status(400).json(err);
+    }
+    return res.json(result);
+
+  })
+})
+
+router.put("/editBadge/:id", upload.single('ins_icone'), isAuthenticated, (req, res) => {
+
+  const id = req.params.id;
+
+  const badge = [
+    req.body.ins_titulo,
+    req.body.ins_qtdCursos,
+    req.file.filename,
+  ]
+
+  const q = `UPDATE ins_insignia SET ins_titulo = ?, ins_qtdCursos = ?, ins_icone = ? WHERE ins_id = ${id}`;
+  db.query(q, badge, (err, result) => {
+    if(err) {
+      return res.status(400).json(err);
+    }
+    return res.json(result);
+
+  })
+})
+
+router.delete("/deleteBadge/:id", isAuthenticated, (req, res) => {
+
+  const id = req.params.id;
+
+  const q = `DELETE FROM ins_insignia WHERE ins_id = ${id}`;
   db.query(q, (err, result) => {
     if(err) {
       return res.status(400).json(err);
