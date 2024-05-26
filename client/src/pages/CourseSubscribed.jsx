@@ -14,6 +14,7 @@ import {
   Check,
   ChevronLeft,
   ListTodo,
+  Plus,
   Sparkle,
   SquareLibrary,
   Text,
@@ -34,6 +35,16 @@ const CourseSubscribed = () => {
   const [selectedConQuizz, setSelectedConQuizz] = useState(-1);
   const [current, setCurrent] = useState(0);
   const [courseCompleted, setCourseCompleted] = useState(false);
+
+  const [badgeWon, setBadgeWon] =
+    useState(
+      {
+      ins_id: 1,
+      ins_titulo: "Bronze",
+      ins_qtdCursos: 2,
+      ins_icone: "52ab5f8e1b1954910de9186e6a5ba316",
+    }
+  )
 
   const [loading, setLoading] = useState(true);
 
@@ -190,7 +201,7 @@ const CourseSubscribed = () => {
     axios
       .put(
         `http://localhost:3000/student/completeCourse`,
-        { 
+        {
           cursoId: cursoId,
           cursoXp: course.cur_qtdExperiencia,
           userNivel: user.nivel || 1,
@@ -201,16 +212,18 @@ const CourseSubscribed = () => {
         }
       )
       .then((res) => {
-        console.log(res)
+        console.log(res);
         setUser({
           ...user,
           nivel: res.data.userNivel,
           experiencia: res.data.userXp,
-        })
+        });
 
         let newCourse = course;
         newCourse.completo = 1;
         setCourse(newCourse);
+        setBadgeWon(res.data.badge);
+
         setTimeout(() => {
           setCourseCompleted(true);
         }, 1000);
@@ -234,8 +247,7 @@ const CourseSubscribed = () => {
 
   return (
     <>
-      {
-        courseCompleted &&
+      {courseCompleted && (
         <Overlay onClick={() => setCourseCompleted(false)}>
           <div className="p-6 shadow-lg rounded-lg bg-white flex flex-col gap-2 w-[45ch] text-center">
             <div className="flex items-center gap-2">
@@ -243,31 +255,39 @@ const CourseSubscribed = () => {
               <div className="bg-amber-500 h-0.5 flex-1"></div>
             </div>
             <div className="flex items-center gap-2 justify-center">
-              {/* <div
-                className={`p-1 rounded-lg bg-amber-200/50 text-amber-400/80`}
-              >
-                <Check size={20} strokeWidth={6} />
-              </div> */}
               <h1 className="text-3xl font-bold">Parabéns!</h1>
             </div>
             <div className="text-lg font-medium">
               Você completo o curso {course?.cur_titulo}
             </div>
+
+            {badgeWon && (
+              <div className="flex flex-col items-center">
+                <div className="text-lg font-medium">
+                  e ganhou a insígnia {badgeWon?.ins_titulo}:
+                </div>
+                <img
+                  src={`http://www.localhost:3000/badges/${badgeWon?.ins_icone}`}
+                  alt="badge icon"
+                  className="h-28 mt-4"
+                />
+              </div>
+            )}
+            <div className="mt-4 px-2 py-1 rounded text-white text-lg font-medium bg-gradient-to-tr from-amber-400/90 to-amber-500/90 flex items-center justify-center w-fit self-center">
+              <Plus size={22} strokeWidth={3} />
+              {course?.cur_qtdExperiencia} XP
+            </div>
             <div className="flex justify-end items-center gap-4 mt-4">
-              <Button variant="text"
-                onClick={() => setCourseCompleted(false)}
-              >
+              <Button variant="text" onClick={() => setCourseCompleted(false)}>
                 Fechar
               </Button>
-              <Button
-                onClick={() => navigate("/student/profile")}
-              >
+              <Button onClick={() => navigate("/student/profile")}>
                 Ver Certificado
               </Button>
             </div>
           </div>
         </Overlay>
-      }
+      )}
       <Container>
         {loading ? (
           <Loading />
