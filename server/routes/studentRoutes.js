@@ -241,7 +241,9 @@ router.put("/completeModule", isAuthenticated, (req, res) => {
 router.put("/completeCourse", isAuthenticated, (req, res) => {
   const user = jwt.verify(req.cookies.token, "jkey");
 
-  const q = `UPDATE alc_aluno_curso SET alc_status = ${true} WHERE alc_alunoId = ${user.id} and alc_cursoId = ${req.body.cursoId}`;
+  const q = `UPDATE alc_aluno_curso SET alc_status = ${true} WHERE alc_alunoId = ${
+    user.id
+  } and alc_cursoId = ${req.body.cursoId}`;
 
   db.query(q, (err, result) => {
     if (err) {
@@ -261,14 +263,77 @@ router.put("/completeCourse", isAuthenticated, (req, res) => {
           if (err2) {
             return res.status(400).json(err2);
           } else {
-            user.experiencia = newXp;
-            user.nivel = newLevel;
 
-            return res.json({
-              result,
-              userNivel: newLevel,
-              userXp: newXp,
-            });
+
+
+            // BADGE LOGIC HERE
+
+            db.query(
+              `SELECT COUNT(*) AS qtdCompletos FROM alc_aluno_curso WHERE alc_alunoId = ${user.id} AND alc_status = 1;`,
+              (err3, result3) => {
+                if (err3) {
+                  return res.status(400).json(err3);
+                } else {
+                  const qtdCompletos = result3[0]?.qtdCompletos;
+                  db.query(
+                    `SELECT ins_id, ins_titulo, ins_qtdCursos, ins_icone FROM ins_insignia WHERE ins_qtdCursos = ${qtdCompletos};`,
+                    (err4, result4) => {
+                      if (err4) {
+                        return res.status(400).json(err4);
+                      } else {
+                        const badge = result4[0];
+                        if (badge) {
+                          db.query(
+                            `SELECT COUNT(*) AS hasBadge FROM ali_aluno_insignia WHERE ali_alunoId = ${
+                              user.id
+                            } AND ali_insigniaId = ${badge.ins_id};`,
+                            (err5, result5) => {
+                              if (err5) {
+                                return res.status(400).json(err5);
+                              } else {
+                                const hasBadge = result5[0]?.hasBadge;
+
+                                if (hasBadge == 0) {
+                                  //    INSERT
+                                  db.query(`INSERT INTO ali_aluno_insignia (ali_alunoId, ali_insigniaId) VALUES (${user.id}, ${badge.ins_id});`,
+                                    (err6, result6) => {
+                                      if(err6) {
+                                        return res.status(400).json(err6);
+                                      } else {
+                                        return res.json({
+                                          result,
+                                          userNivel: newLevel,
+                                          userXp: newXp,
+                                          badge: badge,
+                                        });
+                                      }
+                                  })
+                                } else {
+                                  //  ALREADY HAS BADGE SO RETURN
+                                  return res.json({
+                                    result,
+                                    userNivel: newLevel,
+                                    userXp: newXp,
+                                  });
+                                }
+                              }
+                            }
+                          );
+                        } else {
+                          //   RETURN BC NO BADGE FOUND
+                          return res.json({
+                            result,
+                            userNivel: newLevel,
+                            userXp: newXp,
+                          });
+                        }
+                      }
+                    }
+                  );
+                }
+              }
+            );
+            // END BADGE LOGIC
           }
         }
       );
