@@ -1,7 +1,7 @@
 import React, { useContext, useRef, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext.jsx";
 import axios from "axios";
-import { isRouteErrorResponse, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { UserRound, LogOut, UserCog2 } from "lucide-react";
 
 const ProfileIcon = () => {
