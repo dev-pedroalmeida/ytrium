@@ -36,15 +36,13 @@ const CourseSubscribed = () => {
   const [current, setCurrent] = useState(0);
   const [courseCompleted, setCourseCompleted] = useState(false);
 
-  const [badgeWon, setBadgeWon] =
-    useState(
-      {
-      ins_id: 1,
-      ins_titulo: "Bronze",
-      ins_qtdCursos: 2,
-      ins_icone: "52ab5f8e1b1954910de9186e6a5ba316",
-    }
-  )
+  const [badgeWon, setBadgeWon] = useState();
+    //   {
+    //   ins_id: 1,
+    //   ins_titulo: "Bronze",
+    //   ins_qtdCursos: 2,
+    //   ins_icone: "52ab5f8e1b1954910de9186e6a5ba316",
+    // }
 
   const [loading, setLoading] = useState(true);
 
@@ -282,7 +280,7 @@ const CourseSubscribed = () => {
                 Fechar
               </Button>
               <Button onClick={() => navigate("/student/profile")}>
-                Ver Certificado
+                Ir ao Perfil
               </Button>
             </div>
           </div>

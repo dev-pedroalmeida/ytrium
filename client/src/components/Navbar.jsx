@@ -68,14 +68,14 @@ const Navbar = ({ userType, login, signup, instructorSignup }) => {
               <Link to={"/admin/categories"}>
                 <NavItem>Categorias</NavItem>
               </Link>
+              <Link to={"/admin/badges"}>
+                <NavItem>Insígnias</NavItem>
+              </Link>
               <Link to={"/admin/users"}>
                 <NavItem>Usuários</NavItem>
               </Link>
               <Link to={"/admin/courses"}>
                 <NavItem>Cursos</NavItem>
-              </Link>
-              <Link to={"/admin/badges"}>
-                <NavItem>Insígnias</NavItem>
               </Link>
             </div>
             <ProfileIcon />
@@ -86,16 +86,20 @@ const Navbar = ({ userType, login, signup, instructorSignup }) => {
   }, [userType]);
 
   return (
-    <>
-      <header className="py-3 px-24 flex items-center justify-between">
-        <div className="flex items-center gap-1">
-          <YtriumLogo />
-          <YtriumText />
-        </div>
-        {/* <img src={ytrium} alt="ytrium logo" className={navStyles.logo} /> */}
-        {navContent}
-      </header>
-    </>
+    <header
+      className={`py-3 px-24 flex items-center justify-between
+                    ${
+                      (userType == null || userType == undefined) &&
+                      "bg-amber-50/70 rounded-lg mx-20 px-10 relative top-5"
+                    }`}
+    >
+      <div className="flex items-center gap-1">
+        <YtriumLogo />
+        <YtriumText />
+      </div>
+      {/* <img src={ytrium} alt="ytrium logo" className={navStyles.logo} /> */}
+      {navContent}
+    </header>
   );
 };
 

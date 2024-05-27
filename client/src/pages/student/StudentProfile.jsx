@@ -9,7 +9,7 @@ import ContainerHeader from "../../components/ContainerHeader.jsx";
 import CoursesList from "../../components/courseCard/CoursesList.jsx";
 import CourseCard from "../../components/courseCard/CourseCard.jsx";
 import Button from "../../components/Button.jsx";
-import { Download, UserRound } from "lucide-react";
+import { Download, Info, UserRound } from "lucide-react";
 
 const StudentProfile = () => {
   const { user } = useContext(AuthContext);
@@ -17,6 +17,7 @@ const StudentProfile = () => {
   const [currentTab, setCurrentTab] = useState(1);
   const [loading, setLoading] = useState(true);
   const [courses, setCourses] = useState([]);
+  const [badges, setBadges] = useState([]);
   const [xpPerc, setXpPerc] = useState(null);
 
   useEffect(() => {
@@ -34,6 +35,21 @@ const StudentProfile = () => {
         console.error(err);
         setLoading(false);
       });
+
+    axios
+      .get("http://localhost:3000/student/myBadges", {
+        withCredentials: true,
+      })
+      .then((res) => {
+        // console.log(res);
+        setBadges(res.data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error(err);
+        setLoading(false);
+      });
+
     setXpPerc(((user?.experiencia || 0) / ((user?.nivel || 1) * 4000)) * 100);
   }, []);
 
@@ -85,6 +101,16 @@ const StudentProfile = () => {
               >
                 Cursos completos
               </div>
+              <div
+                className={`cursor-pointer p-2 rounded-lg font-bold text-sm text-amber-600/70 relative ${
+                  currentTab == 2 && "text-amber-500 bg-amber-100"
+                }`}
+                onClick={() => {
+                  setCurrentTab(2);
+                }}
+              >
+                Insígnias
+              </div>
             </div>
 
             {currentTab == 1 && (
@@ -134,6 +160,39 @@ const StudentProfile = () => {
                     <p>Nenhum curso completo!</p>
                   )}
                 </CoursesList>
+              </div>
+            )}
+
+            {currentTab == 2 && (
+              <div className="mt-4">
+                <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+                  {badges?.length > 0 ? (
+                    badges?.map((badge) => {
+                      return (
+                        <div className="bg-white flex flex-col items-center p-4 gap-2 shadow rounded-lg">
+                          <img
+                            src={`http://localhost:3000/badges/${badge?.ins_icone}`}
+                            alt="badge icon"
+                            className="w-24 mb-2"
+                          />
+                          <div className="h-1 w-full bg-gradient-to-tr from-amber-300 to bg-amber-500"></div>
+                          <div className="font-bold text-lg mt-1">{badge?.ins_titulo}</div>
+                          <div>Por completar {badge?.ins_qtdCursos} cursos!</div>
+                        </div>
+                      );
+                    })
+                  ) : (
+                    <div className="flex flex-col items-center">
+                      <Info color="" />
+                      <p className="text-center font-semibold">
+                        Você ainda não possui nenhuma insígnia
+                      </p>
+                      <p className="text-center font-semibold">
+                        complete cursos para conseguí-las!
+                      </p>
+                    </div>
+                  )}
+                </div>
               </div>
             )}
           </>

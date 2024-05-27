@@ -28,7 +28,7 @@ function App() {
       navigate("/admin");
     }
 
-    if (user == null) {
+    if (user == null || user == undefined) {
       axios
         .get("http://localhost:3000/", {
           withCredentials: true,
@@ -37,6 +37,7 @@ function App() {
           console.log(res);
           if (res.data.auth == 1) {
             setUser(res.data.user);
+            setIsAuth(true)
           } else {
             navigate("/landing");
           }
