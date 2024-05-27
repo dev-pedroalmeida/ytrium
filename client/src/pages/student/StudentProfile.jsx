@@ -41,7 +41,7 @@ const StudentProfile = () => {
         withCredentials: true,
       })
       .then((res) => {
-        // console.log(res);
+        console.log(res);
         setBadges(res.data);
         setLoading(false);
       })
@@ -169,7 +169,7 @@ const StudentProfile = () => {
                   {badges?.length > 0 ? (
                     badges?.map((badge) => {
                       return (
-                        <div className="bg-white flex flex-col items-center p-4 gap-2 shadow rounded-lg">
+                        <div key={badge?.ins_id} className="bg-white flex flex-col items-center p-4 gap-2 shadow rounded-lg">
                           <img
                             src={`http://localhost:3000/badges/${badge?.ins_icone}`}
                             alt="badge icon"
