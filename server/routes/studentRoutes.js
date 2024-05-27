@@ -368,7 +368,8 @@ router.get("/completedCourses", isAuthenticated, (req, res) => {
 router.get("/myBadges", isAuthenticated, (req, res) => {
   const { id } = jwt.verify(req.cookies.token, "jkey");
 
-  const q = `SELECT DISTINCT ins_id, ins_titulo, ins_qtdCursos, ins_icone FROM ins_insignia RIGHT JOIN ali_aluno_insignia on ali_alunoId = ${id};`
+  const q = `SELECT DISTINCT ins_id, ins_titulo, ins_qtdCursos, ins_icone FROM ins_insignia
+  RIGHT JOIN ali_aluno_insignia on ali_alunoId = ${id} and ali_insigniaId = ins_id;`
 
   db.query(q, (err, result) => {
     if (err) {
