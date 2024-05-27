@@ -365,4 +365,24 @@ router.get("/completedCourses", isAuthenticated, (req, res) => {
   });
 });
 
+router.get("/myBadges", isAuthenticated, (req, res) => {
+  const { id } = jwt.verify(req.cookies.token, "jkey");
+
+  const q = `SELECT DISTINCT ins_id, ins_titulo, ins_qtdCursos, ins_icone FROM ins_insignia RIGHT JOIN ali_aluno_insignia on ali_alunoId = ${id};`
+
+  db.query(q, (err, result) => {
+    if (err) {
+      return res.status(400).json(err);
+    }
+
+    if(result.length < 1) {
+      return res.status(404).json("Você não possui nenhuma insígnia!")
+    }
+
+    const insignias = result
+
+    return res.json(insignias)
+  })
+})
+
 module.exports = router;
