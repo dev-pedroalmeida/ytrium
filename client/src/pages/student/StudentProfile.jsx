@@ -184,10 +184,10 @@ const StudentProfile = () => {
                   ) : (
                     <div className="flex flex-col items-center">
                       <Info color="" />
-                      <p className="text-center font-semibold">
+                      <p className="text-center font-semibold w-fit">
                         Você ainda não possui nenhuma insígnia
                       </p>
-                      <p className="text-center font-semibold">
+                      <p className="text-center font-semibold w-fit">
                         complete cursos para conseguí-las!
                       </p>
                     </div>
