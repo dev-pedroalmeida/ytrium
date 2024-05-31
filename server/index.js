@@ -20,7 +20,7 @@ app.use(express.static('public'))
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: ["http://localhost:5173", "exp://192.168.15.4:8081"],
     credentials: true,
   })
 );
