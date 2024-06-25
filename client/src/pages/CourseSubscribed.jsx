@@ -37,12 +37,12 @@ const CourseSubscribed = () => {
   const [courseCompleted, setCourseCompleted] = useState(false);
 
   const [badgeWon, setBadgeWon] = useState();
-    //   {
-    //   ins_id: 1,
-    //   ins_titulo: "Bronze",
-    //   ins_qtdCursos: 2,
-    //   ins_icone: "52ab5f8e1b1954910de9186e6a5ba316",
-    // }
+  //   {
+  //   ins_id: 1,
+  //   ins_titulo: "Bronze",
+  //   ins_qtdCursos: 2,
+  //   ins_icone: "52ab5f8e1b1954910de9186e6a5ba316",
+  // }
 
   const [loading, setLoading] = useState(true);
 
@@ -234,7 +234,7 @@ const CourseSubscribed = () => {
         withCredentials: true,
       })
       .then((res) => {
-        console.log(res);
+        console.log(res.data);
         setCourse(res.data);
         setModulos(res.data.modulos);
         setTimeout(() => {
@@ -256,7 +256,10 @@ const CourseSubscribed = () => {
               <h1 className="text-3xl font-bold">Parabéns!</h1>
             </div>
             <div className="text-lg font-medium">
-              Você completo o curso {course?.cur_titulo}
+              Você completou o curso
+            </div>
+            <div className="text-lg font-bold">
+              {course?.cur_titulo}
             </div>
 
             {badgeWon && (
@@ -315,7 +318,7 @@ const CourseSubscribed = () => {
                                     transition hover:ring-2 hover:ring-amber-400
                                     ${
                                       selectedModule === modulo.index &&
-                                      "bg-amber-200/60"
+                                      "bg-amber-200/40"
                                     }`}
                         key={modulo.index}
                         onClick={() => {

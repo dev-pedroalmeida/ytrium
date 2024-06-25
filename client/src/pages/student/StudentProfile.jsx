@@ -183,12 +183,9 @@ const StudentProfile = () => {
                     })
                   ) : (
                     <div className="flex flex-col items-center">
-                      <Info color="" />
-                      <p className="text-center font-semibold w-fit">
-                        Você ainda não possui nenhuma insígnia
-                      </p>
-                      <p className="text-center font-semibold w-fit">
-                        complete cursos para conseguí-las!
+                      <Info color="black" />
+                      <p className="text-center font-semibold">
+                        Você ainda não possui nenhuma insígnia, complete cursos para conseguí-las!
                       </p>
                     </div>
                   )}

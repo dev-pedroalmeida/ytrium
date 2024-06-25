@@ -88,9 +88,13 @@ const CoursePage = () => {
             <div className="flex flex-col gap-2 items-end pl-20">
               {user?.tipo == "estudante" &&
                 (course.alc_status == null ? (
-                  <Button onClick={() => subscribe()}>Inscreva-se</Button>
+                  <Button onClick={() => subscribe()}>
+                    Inscreva-se
+                  </Button>
                 ) : (
-                  <Button onClick={() => navigate(`/course/subscribed/${courseId}`)}>
+                  <Button
+                    onClick={() => navigate(`/course/subscribed/${courseId}`)}
+                  >
                     Continuar
                   </Button>
                 ))}
@@ -118,9 +122,14 @@ const CoursePage = () => {
                 {course.modulos?.length > 0 ? (
                   course.modulos.map((modulo, index) => {
                     return (
-                      <div className="p-2 rounded-lg text-ellipsis flex items-center gap-1 bg-amber-100 text-amber-500 font-bold" key={index}>
+                      <div
+                        className="p-2 rounded-lg text-ellipsis flex items-center gap-1 bg-amber-100 text-amber-500 font-bold"
+                        key={index}
+                      >
                         <SquareLibrary size={18} />
-                        <span className="overflow-hidden grow-0">{modulo.titulo}</span>
+                        <span className="overflow-hidden grow-0">
+                          {modulo.titulo}
+                        </span>
                       </div>
                     );
                   })

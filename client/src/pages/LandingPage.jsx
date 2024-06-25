@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import SignupForm from "../components/SignupForm";
 import LoginForm from "../components/LoginForm";
 import Navbar from "../components/Navbar";
+import Button from "../components/Button";
+import { ArrowRight } from "lucide-react";
 
 const LandingPage = () => {
   const [signup, setSignup] = useState(false);
@@ -31,8 +33,8 @@ const LandingPage = () => {
         />
       )}
 
-      <div className="relative">
-        <div className="max-h-[1100px] min-h-[800px] w-screen absolute top-0 right-0 -z-10 overflow-hidden bg-amber-50">
+      <div className="relative z-10">
+        <div className="max-h-[1100px] min-h-[900px] w-screen absolute top-0 right-0 -z-10 overflow-hidden">
           <div className="w-[700px] h-[700px] bg-amber-400/60 blur-[100px] rounded-full absolute -top-96 right-0 box-border"></div>
           <div className="w-[800px] h-[800px] bg-orange-400/60 blur-[100px] rounded-full absolute -top-56 right-[500px]"></div>
         </div>
@@ -54,14 +56,42 @@ const LandingPage = () => {
           }}
         />
 
-        <div className="mx-24 my-20">
-          <h1 className="mb-16 text-8xl text-balance font-semibold">
+        <div className="mx-24 my-28 flex flex-col items-center">
+          <h1 className="mb-16 text-8xl text-center text-balance font-semibold">
             Aprenda no Seu Ritmo, Conquiste o Futuro
           </h1>
-          <p className="max-w-2xl text-balance text-2xl font-medium text-zinc-700">
+          <p className="text-balance text-center text-2xl font-medium text-zinc-700 mb-10">
             Explore cursos de tecnologia, suba de nível e alcance seus
             objetivos. O poder do conhecimento está em suas mãos.
           </p>
+          <Button
+            onClick={() => {
+              setLogin(false);
+              setSignUser("estudante");
+              setSignup(true);
+            }}
+            variant="large"
+          >
+            Cadastre-se
+            <ArrowRight />
+          </Button>
+        </div>
+        <div className="mx-24 my-36 rounded-xl p-2">
+          {/* <p>
+            Conheça os nossos cursos
+          </p>
+          <p>
+            Conheça os nossos cursos
+          </p>
+          <p>
+            Conheça os nossos cursos
+          </p>
+          <p>
+            Conheça os nossos cursos
+          </p>
+          <p>
+            Conheça os nossos cursos
+          </p> */}
         </div>
       </div>
     </>

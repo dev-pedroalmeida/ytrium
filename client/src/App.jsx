@@ -47,10 +47,10 @@ function App() {
 
   return (
     <AuthContext.Provider value={{ user, setUser, isAuth, setIsAuth }}>
-      <div className="h-screen w-screen absolute top-0 right-0 -z-10 overflow-hidden bg-amber-50">
-        {/* <div className="w-[300px] h-[300px] bg-amber-400/40 blur-[100px] rounded-full absolute top-[80px] right-[200px]"></div>
-        <div className="w-[400px] h-[400px] bg-orange-400/30 blur-[100px] rounded-full absolute top-[100px] right-[400px]"></div> */}
-      </div>
+      {/* <div className="h-screen w-screen absolute top-0 right-0 -z-10 overflow-hidden bg-amber-50">
+        <div className="w-[300px] h-[300px] bg-amber-400/40 blur-[100px] rounded-full absolute top-[80px] right-[200px]"></div>
+        <div className="w-[400px] h-[400px] bg-orange-400/30 blur-[100px] rounded-full absolute top-[100px] right-[400px]"></div>
+      </div> */}
       <div className="min-h-[107vh] flex flex-col">
         <div className="flex-1">
           {(user?.tipo && pathname.split("/")[1] !== "landing") && <Navbar userType={user?.tipo} />}

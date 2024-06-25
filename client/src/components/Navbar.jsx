@@ -35,9 +35,9 @@ const Navbar = ({ userType, login, signup, instructorSignup }) => {
               <Link to={"/student/subscriptions"}>
                 <NavItem>Inscrições</NavItem>
               </Link>
-              <Link to={"/student/explore"}>
+              {/* <Link to={"/student/explore"}>
                 <NavItem>Explorar</NavItem>
-              </Link>
+              </Link> */}
             </div>
             <ProfileIcon />
           </>
@@ -50,9 +50,9 @@ const Navbar = ({ userType, login, signup, instructorSignup }) => {
               <Link to={"/instructor"}>
                 <NavItem>Home</NavItem>
               </Link>
-              <Link to={"/instructor/courses"}>
+              {/* <Link to={"/instructor/courses"}>
                 <NavItem>Meus cursos</NavItem>
-              </Link>
+              </Link> */}
             </div>
             <ProfileIcon />
           </>
@@ -71,12 +71,12 @@ const Navbar = ({ userType, login, signup, instructorSignup }) => {
               <Link to={"/admin/badges"}>
                 <NavItem>Insígnias</NavItem>
               </Link>
-              <Link to={"/admin/users"}>
+              {/* <Link to={"/admin/users"}>
                 <NavItem>Usuários</NavItem>
               </Link>
               <Link to={"/admin/courses"}>
                 <NavItem>Cursos</NavItem>
-              </Link>
+              </Link> */}
             </div>
             <ProfileIcon />
           </>
@@ -87,10 +87,12 @@ const Navbar = ({ userType, login, signup, instructorSignup }) => {
 
   return (
     <header
-      className={`py-3 px-24 flex items-center justify-between
+      className={`py-3 flex items-center justify-between border-b-2 border-amber-500/30 transition-all
                     ${
-                      (userType == null || userType == undefined) &&
-                      "bg-amber-50/70 rounded-lg mx-20 px-10 relative top-5"
+                      (userType == null || userType == undefined) ?
+                      "bg-amber-50/70 rounded-lg mx-20 px-6 relative top-5"
+                      :
+                      "px-24"
                     }`}
     >
       <div className="flex items-center gap-1">

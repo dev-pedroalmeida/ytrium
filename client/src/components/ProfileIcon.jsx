@@ -50,22 +50,22 @@ const ProfileIcon = () => {
       </div>
 
       {open && (
-        <div className="min-w-[160px] absolute top-12 right-28 bg-white p-2 shadow-md rounded flex flex-col gap-2 z-50">
+        <div className="min-w-[160px] absolute top-12 right-28 bg-amber-50 p-2 border border-amber-500/30 shadow-lg rounded flex flex-col gap-2 z-50">
           <div className="py-2 px-1">
             <div className="font-semibold">{user?.nome}</div>
             <div className="text-xs text-zinc-800/80">{user?.email}</div>
           </div>
 
           <div
-            className="rounded transition p-2 text-zinc-900/80 cursor-pointer hover:bg-orange-200 font-medium flex items-center gap-2"
+            className="rounded transition p-2 text-zinc-900/80 cursor-pointer hover:bg-amber-100 font-medium text-sm flex items-center gap-2"
             onClick={() => handleProfile()}
           >
             <UserCog2 size={18} />
-            Perfil
+            Meu Perfil
           </div>
 
           <div
-            className="rounded transition p-2 text-zinc-900/80 cursor-pointer hover:bg-orange-200 font-medium flex items-center gap-2"
+            className="rounded transition p-2 text-zinc-900/80 cursor-pointer hover:bg-amber-100 font-medium text-sm flex items-center gap-2"
             onClick={() => handleLogout()}
           >
             <LogOut size={18} />
