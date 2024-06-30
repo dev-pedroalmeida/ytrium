@@ -13,10 +13,12 @@ import ContainerTitle from "../components/ContainerTitle";
 import {
   Check,
   ChevronLeft,
+  FolderSearch,
   ListTodo,
   Plus,
   Sparkle,
   SquareLibrary,
+  SquareMousePointer,
   Text,
 } from "lucide-react";
 import Button from "../components/Button";
@@ -247,7 +249,7 @@ const CourseSubscribed = () => {
     <>
       {courseCompleted && (
         <Overlay onClick={() => setCourseCompleted(false)}>
-          <div className="p-6 shadow-lg rounded-lg bg-white flex flex-col gap-2 w-[45ch] text-center">
+          <div className="p-6 shadow-lg rounded-lg bg-white flex flex-col gap-2 w-[55ch] text-center">
             <div className="flex items-center gap-2">
               <Sparkle color="#F59E0B" />
               <div className="bg-amber-500 h-0.5 flex-1"></div>
@@ -255,12 +257,8 @@ const CourseSubscribed = () => {
             <div className="flex items-center gap-2 justify-center">
               <h1 className="text-3xl font-bold">Parabéns!</h1>
             </div>
-            <div className="text-lg font-medium">
-              Você completou o curso
-            </div>
-            <div className="text-lg font-bold">
-              {course?.cur_titulo}
-            </div>
+            <div className="text-lg font-medium">Você completou o curso</div>
+            <div className="text-lg font-bold">{course?.cur_titulo}</div>
 
             {badgeWon && (
               <div className="flex flex-col items-center">
@@ -449,7 +447,7 @@ const CourseSubscribed = () => {
                           "material"
                         ) ? (
                           <>
-                            <div>
+                            <div className="flex flex-col items-center justify-center">
                               {listConQuizz[selectedConQuizz].videoLink && (
                                 <>
                                   {/* <h3>Vídeo:</h3> */}
@@ -457,7 +455,7 @@ const CourseSubscribed = () => {
                                     width="600"
                                     height="315"
                                     src={
-                                      listConQuizz[selectedConQuizz].videoLink
+                                      'https://www.youtube.com/embed/' + /(?:https?:\/\/)?(?:(?:(?:www\.?)?youtube\.com(?:\/(?:(?:watch\?.*?(v=[^&\s]+).*)|(?:v(\/.*))|(channel\/.+)|(?:user\/(.+))|(?:results\?(search_query=.+))))?)|(?:youtu\.be(\/.*)?))/.exec(listConQuizz[selectedConQuizz].videoLink)[1].slice(2)
                                     }
                                     title="YouTube video player"
                                     frameBorder="0"
@@ -509,7 +507,10 @@ const CourseSubscribed = () => {
                     )}
                   </>
                 ) : (
-                  <p className="font-medium text-lg p-2">Selecione um módulo</p>
+                  <div className="max-w-[60%] min-h-44 bg-white/40 ring-1 ring-amber-400 rounded-lg shadow p-3 flex flex-col items-center justify-center">
+                    <SquareMousePointer size={32} color="#f59e0b" />
+                    <p className="font-medium text-lg">Selecione um módulo!</p>
+                  </div>
                 )}
               </div>
             </div>

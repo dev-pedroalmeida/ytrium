@@ -56,7 +56,7 @@ const CoursePage = () => {
       ) : (
         <>
           <div className="flex gap-2">
-            <div className="flex-1 flex justify-between pr-8 border-r-2 border-gray-100">
+            <div className="flex-1 flex justify-between pr-8 border-r-2 border-amber-200">
               <div className="flex flex-col gap-4">
                 <h1 className="text-4xl font-bold">{course.cur_titulo}</h1>
                 <div className="text-lg font-medium flex items-center gap-2">
@@ -67,7 +67,7 @@ const CoursePage = () => {
                 </div>
               </div>
               <div className="flex flex-col gap-4">
-                <div className="px-2 py-1 rounded text-white font-medium bg-gradient-to-tr from-amber-400/90 to-amber-500/90">
+                <div className="w-fit px-2 py-1 rounded text-white font-medium bg-gradient-to-tr from-amber-400/90 to-amber-500/90">
                   {course.cur_dificuldade}-{course.cur_qtdExperiencia} xp
                 </div>
                 <div>

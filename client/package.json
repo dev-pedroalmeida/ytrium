@@ -20,7 +20,8 @@
     "react-select": "^5.7.7",
     "slate": "^0.101.1",
     "slate-history": "^0.100.0",
-    "slate-react": "^0.101.1"
+    "slate-react": "^0.101.1",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/react": "^18.2.15",

@@ -10,6 +10,7 @@ import FormTitle from "./form/FormTitle";
 import Button from "./Button";
 import FormLabel from "./form/FormLabel";
 import FormInput from "./form/FormInput";
+import { z } from 'zod'
 
 const ContentModal = ({
   saveContent,
@@ -51,11 +52,18 @@ const ContentModal = ({
       return;
     }
 
+    const videoLinkRegex = /(?:https?:\/\/)?(?:(?:(?:www\.?)?youtube\.com(?:\/(?:(?:watch\?.*?(v=[^&\s]+).*)|(?:v(\/.*))|(channel\/.+)|(?:user\/(.+))|(?:results\?(search_query=.+))))?)|(?:youtu\.be(\/.*)?))/
+
+    const videoLink = videoLinkRegex.exec(content.videoLink)
+
+    console.log(content)    
+
     console.log(error);
     if (error == false || error == undefined || error == "") {
       if (cont.hasOwnProperty("index")) {
         editContent({
           ...content,
+          videoLink: videoLink[1].slice(2),
           material: JSON.stringify(material),
         });
       } else {

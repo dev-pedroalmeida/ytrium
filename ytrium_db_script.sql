@@ -1,6 +1,7 @@
 create database ytrium;
 use ytrium;
 
+drop database ytrium;
 
 create table usu_usuario(
 	usu_id int primary key auto_increment,
@@ -13,9 +14,19 @@ create table usu_usuario(
     usu_nivel int
 );
 select * from usu_usuario;
+
+
+insert into usu_usuario (usu_nome, usu_email, usu_senha, usu_tipo) VALUES ('Admin', 'admin@gmail.com', 'e4cc325d569d7c35a3e6405e9c3eeed0de0674276bbdc13ffc323886ae911607', 'admin');
+
+
+
 select * from alc_aluno_curso;
 update usu_usuario set usu_experiencia = 0, usu_nivel = 0 where usu_id = 1;
-update alc_aluno_curso set alc_status = 0 where alc_alunoId = 1;
+
+update alc_aluno_curso set alc_status = 0 where alc_alunoId = 5;
+update alm_aluno_modulo set alm_completo = 0 where alm_alunoId = 5;
+update aco_aluno_conteudo set aco_completo = 0 where aco_alunoId = 5;
+update alq_aluno_quizz set alq_completo = 0 where alq_alunoId = 5;
 
 
 SELECT COUNT(*) AS qtdCompletos FROM alc_aluno_curso WHERE alc_alunoId = 1 AND alc_status = 1;
@@ -29,12 +40,7 @@ delete from ali_aluno_insignia where ali_alunoId = 1;
 
 
 
-
-insert into usu_usuario (usu_nome, usu_email, usu_senha, usu_tipo) VALUES ('Admin', 'admin@hotmail.com', '6a74b56ecb3cd21d3e58f1b6733c28e5c4da8e4ca42e69f5ae847d7d065591fb', 'admin');
-insert into usu_usuario (usu_nome, usu_email, usu_senha, usu_tipo) VALUES ('Instrutor', 'ins@hotmail.com', '6a74b56ecb3cd21d3e58f1b6733c28e5c4da8e4ca42e69f5ae847d7d065591fb', 'instrutor');
-insert into usu_usuario (usu_nome, usu_email, usu_senha, usu_tipo) VALUES ('Pedro Henrique', 'pedro@hotmail.com', '6a74b56ecb3cd21d3e58f1b6733c28e5c4da8e4ca42e69f5ae847d7d065591fb', 'estudante');
-
-
+delete from cur_curso where cur_id > 0;
 create table cur_curso(
 	cur_id int primary key auto_increment,
     cur_titulo varchar(50) not null,

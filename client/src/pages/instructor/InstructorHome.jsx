@@ -9,6 +9,7 @@ import ContainerTitle from "../../components/ContainerTitle";
 import Button from "../../components/Button";
 import CoursesList from "../../components/courseCard/CoursesList";
 import CourseCard from "../../components/courseCard/CourseCard";
+import { SquarePlus } from "lucide-react";
 
 const InstructorHome = () => {
   const [courses, setCourses] = useState([]);
@@ -74,7 +75,10 @@ const InstructorHome = () => {
             );
           })
         ) : (
-          <p>Nenhum curso encontrado!</p>
+          <div className="col-span-2 min-h-32 bg-white/40 ring-1 ring-amber-400 rounded-lg shadow p-3 flex flex-col items-center justify-center">
+            <SquarePlus size={32} color="#f59e0b" />
+            <p className="font-medium text-lg">Crie um novo curso!</p>
+          </div>
         )}
       </CoursesList>
     </Container>

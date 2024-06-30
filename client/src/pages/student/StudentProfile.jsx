@@ -157,7 +157,12 @@ const StudentProfile = () => {
                       );
                     })
                   ) : (
-                    <p>Nenhum curso completo!</p>
+                    <div className="col-span-2 min-h-44 bg-white/40 ring-1 ring-amber-400 rounded-lg shadow p-3 flex flex-col items-center justify-center">
+                      <Info size={32} color="#f59e0b" />
+                      <p className="text-center font-semibold">
+                        Nenhum curso completo!
+                      </p>
+                    </div>
                   )}
                 </CoursesList>
               </div>
@@ -169,23 +174,33 @@ const StudentProfile = () => {
                   {badges?.length > 0 ? (
                     badges?.map((badge) => {
                       return (
-                        <div key={badge?.ins_id} className="bg-white flex flex-col items-center p-4 gap-2 shadow rounded-lg">
+                        <div
+                          key={badge?.ins_id}
+                          className="bg-white flex flex-col items-center p-4 gap-2 shadow rounded-lg"
+                        >
                           <img
                             src={`http://localhost:3000/badges/${badge?.ins_icone}`}
                             alt="badge icon"
                             className="w-24 mb-2"
                           />
                           <div className="h-1 w-full bg-gradient-to-tr from-amber-300 to bg-amber-500"></div>
-                          <div className="font-bold text-lg mt-1">{badge?.ins_titulo}</div>
-                          <div>Por completar {badge?.ins_qtdCursos} cursos!</div>
+                          <div className="font-bold text-lg mt-1">
+                            {badge?.ins_titulo}
+                          </div>
+                          <div>
+                            Por completar {badge?.ins_qtdCursos} cursos!
+                          </div>
                         </div>
                       );
                     })
                   ) : (
-                    <div className="flex flex-col items-center">
-                      <Info color="black" />
+                    <div className="col-span-2 min-h-44 bg-white/40 ring-1 ring-amber-400 rounded-lg shadow p-3 flex flex-col items-center justify-center">
+                      <Info size={32} color="#f59e0b" />
                       <p className="text-center font-semibold">
-                        Você ainda não possui nenhuma insígnia, complete cursos para conseguí-las!
+                        Você ainda não possui nenhuma insígnia,
+                      </p>
+                      <p className="text-center font-semibold">
+                        complete cursos para conseguí-las!
                       </p>
                     </div>
                   )}

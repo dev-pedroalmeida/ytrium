@@ -39,7 +39,7 @@ const CategoriasList = ({ children }) => {
 
 const Categoria = ({ children }) => {
   return (
-    <div className="p-1 text-sm font-bold text-amber-500 rounded-md bg-orange-100/30 ">
+    <div className="p-1 text-sm font-bold text-amber-500 rounded-md bg-orange-200/30 ">
       {children}
     </div>
   );
